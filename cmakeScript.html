@@ -1,0 +1,2972 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>A CMake script to generate skeleton C++ project</title>
+<!-- 2015-07-26 Sun 09:23 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Vincent Picaud" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">A CMake script to generate skeleton C++ project</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Introduction</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Motivations</a></li>
+<li><a href="#sec-1-2">1.2. Emacs, org-mode&#x2026;</a></li>
+<li><a href="#sec-1-3">1.3. Getting started</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. A simple <b>myProject</b></a></li>
+<li><a href="#sec-1-3-2">1.3.2. A simple <b>super-project</b></a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. <span class="todo TODO">TODO</span> </a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Recipes for the <b>createProject.sh</b> script</a>
+<ul>
+<li><a href="#sec-2-1">2.1. The <b>cpp files</b></a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1. <b>Library</b> cpp files</a></li>
+<li><a href="#sec-2-1-2">2.1.2. <b>Executable</b> C++ file</a></li>
+<li><a href="#sec-2-1-3">2.1.3. <b>Example</b> C++ file</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2. <b>Doxygen</b> configuration file</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1. Bibliography</a></li>
+<li><a href="#sec-2-2-2">2.2.2. Figures</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. The <b>CMakeLists.txt</b> files</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1. <b>Main</b> CMakeLists.txt</a></li>
+<li><a href="#sec-2-3-2">2.3.2. <b>Library</b> CMakeLists.txt</a></li>
+<li><a href="#sec-2-3-3">2.3.3. <b>Binary</b> CMakeLists.txt</a></li>
+<li><a href="#sec-2-3-4">2.3.4. <b>Examples</b> CMakeLists.txt</a></li>
+<li><a href="#sec-2-3-5">2.3.5. <b>GTest/CTest</b> CMakeLists.txt</a></li>
+<li><a href="#sec-2-3-6">2.3.6. The <b>cmake/</b> directory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Catalog of <b>shell scripts</b></a>
+<ul>
+<li><a href="#sec-3-1">3.1. The <b>tutorial</b> scripts</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1. A simple <b>project</b></a></li>
+<li><a href="#sec-3-1-2">3.1.2. A simple <b>super-project</b></a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. The <b>createProject.sh</b> script</a>
+<ul>
+<li><a href="#sec-3-2-1">3.2.1. The <b>createEmptyProject.sh</b> script</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Motivations</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<b>CMake</b> is a great tool, however despite all its advantages it is sometimes boring to create a new build solution for each new C++ project.
+The aim of these <b>shell scripts</b> is to provide a working (at least I hope so) project skeleton in one command line:
+</p>
+<pre class="example">
+sh createProject.sh myProject
+</pre>
+
+<p>
+I developed these <b>shell scripts</b> for my personal usages under <b>Linux</b>. By consequence they are currently not tested for <b>Windows</b> or other <b>OS</b>. 
+Feel free to modify them, feed backs or pull requests are welcome.
+</p>
+
+<p>
+To create these <b>shell scripts</b> I picked up some code snippets from various sources. When this happened I put the corresponding <b>link</b> 
+to the original source.
+</p>
+
+<p>
+My main sources of information were:
+</p>
+<ul class="org-ul">
+<li><a href="http://www.cmake.org/documentation/">official cmake site</a>
+</li>
+<li><a href="https://github.com/bast/cmake-example">bast/cmake-example</a> and his homepage with <a href="http://bast.fr/talks/">a lot of interesting talks concerning cmake, git&#x2026;</a>
+</li>
+<li>various <b>stackoverflow</b> questions and/or <b>github</b> projects: <a href="http://stackoverflow.com/questions/20746936/cmake-of-what-use-is-find-package-if-you-need-to-specify-cmake-module-path-an">here</a>, <a href="https://github.com/forexample/package-example">here</a> or <a href="https://github.com/scumm/foobar">here</a>.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Emacs, org-mode&#x2026;</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+All theses <b>shell scripts</b> are <b>automatically</b> generated using <a href="http://orgmode.org/">emacs + org-mode</a> from an unique <b>cmake.org</b> source file. For the hasty users or for those who do not have
+<b>emacs</b> and <b>org-mode</b> properly installed I also provide the generated scripts for a direct usage. However any modification must be done by editing
+ the  <b>cmake.org</b> source file first and then by re-generating the scripts with the  <a href="http://orgmode.org/manual/Extracting-source-code.html">C-c C-v t</a> command.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Getting started</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> A simple <b>myProject</b></h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+To create your first project, go into the <b>tutorial/</b> directory and run
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh" id="Create_MyProject">../createProject.sh myProject
+</pre>
+</div>
+
+<p>
+This will create the following <b>project skeleton</b>. By default the script <b>never</b> overwrite created files. Thats means that you can safely update your build system by reusing the <b>createProject.sh</b> script. Some files are protected against <b>writing</b>, this is only a hint to notify that for a basic usage your generaly do not have to modify them. However, if you need more tuning you can safely modify them, your modifications will <b>not</b> be erased by the script.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt">Project Skeleton                Read only right   Comments    
+                                         |
+myProject/                               |
+├── cmake........................................ Contains the cmake stuff
+│   ├── ConfigGitRevision.cmake..........R....... Retrieves git hash
+│   ├── config.hpp.in....................R....... Project configuration macros, configured by cmake script
+│   ├── ConfigSafeGuards.cmake...........R....... Block in-source-build
+│   ├── ConfigTesting.cmake..............R....... Creates BUILDNAME and enable CTest
+│   ├── FindGit.cmake....................R....... Find git
+│   ├── myProjectConfig.cmake.in................. Contains your default project configuration, no modification needed for a basic usage
+│   └── myProjectDependencies.cmake.............. Contains your project dependencies, you can edit it (not erased by the script)
+├── doc
+│   ├── doxygen.................................. Doxygen stuff, 
+│   │   ├── CMakeLists.txt...............R....... Creates documentation targets
+│   │   ├── doxyfile.in.......................... Your doxygen configuration file, modify me!
+│   ├── figures
+│   │   └── readme.txt
+│   └── myProject_bibliography.bib............... A bibTeX bib file, can be used with Doxygen, modify me!
+├── myProject
+│   ├── CMakeLists.txt...................R.......
+│   ├── toRemove_git_hash.cpp.................... Just there to have something to compile for myProject library, remove me! Installed in include/ 
+│   └── toRemove_git_hash.hpp.................... Just there to have something to compile for myProject library, remove me! Installed in include/myProject 
+├── test
+│   ├── CMakeLists.txt...................R.......
+│   └── toRemove_check_git_hash.cpp.............. CTest/CDash &amp; gtest unit test example, remove me and add more! :-)
+├── bin.......................................... A directory that contains binary files, they are installed in bin/                           
+│   ├── CMakeLists.txt...................R.......
+│   └── toRemove_myProject_git_hash.cpp.......... Just there to have something to compile, remove me! (take care of bin file name collisions in bin/ !!!)
+├── examples..................................... A directory that contains example files, they are NOT installed
+│   ├── CMakeLists.txt...................R.......
+│   └── toRemove_example.cpp..................... Just there to have something to compile, remove me!
+├── CMakeLists.txt.......................R.......
+└── CTestConfig.cmake....................R....... CTest/CDash configuration file
+</pre>
+</div>
+
+<p>
+To test the generated project you can use the <b>check_myProject.sh</b> script
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">./check_myProject.sh
+</pre>
+</div>
+
+<p>
+This script performs the following tasks
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh" id="Check_MyProject"># Create build dir
+#
+cd myProject
+mkdir build
+cd build
+cmake ..
+
+# Check build
+#
+make
+
+# Check documentation (generated by Doxygen)
+# (open myProject/build/doc/doxygen/index.html with your web browser)
+#
+make doc
+
+# Check (local) install
+#
+make DESTDIR=local_install install
+
+# check test 
+#
+make test
+
+# ctest (+ cdash board)
+# 
+ctest -D Experimental
+</pre>
+</div>
+
+<p>
+The approach is to perform an <b>out-of-source-build</b>. 
+</p>
+
+<p>
+The reason is twofold:
+</p>
+<ul class="org-ul">
+<li>this allows the creation of <b>super-project</b> containing several <b>sub-projects</b>
+</li>
+<li>this is really convenient if you use <b>git</b>, as the following <b>.gitignore</b> file
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-txt">$ cat .gitignore
+build*/
+</pre>
+</div>
+<p>
+will filter out all the built files (<b>git status</b> is not polluted by generated files)
+</p>
+
+<p>
+Note that any tentative of <b>in-source-build</b> is detected generate an error <a href="#in-source-build">2.3.6.5</a>.
+</p>
+
+<p>
+One of the main advantage of the proposed script is that it automatically <b>exports</b> the project. If you want to use <b>myProject</b> in another cmake-built project, simply add
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt">if(NOT TARGET myProject)
+find_package(myProject CONFIG REQUIRED)
+
+if(NOT ${myProject_FOUND}) 
+   message(FATAL_ERROR "Did not found myProject module!")
+endif(NOT ${myProject_FOUND})
+endif()
+
+target_link_libraries(yourProject myProject)
+</pre>
+</div>
+<p>
+in your project dependencies. You can take a look at [[<a href="#project-dependencies">2.3.6.2</a>]] for further details
+</p>
+
+<p>
+This Export/Import feature is illustrated in the next paragraph
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> A simple <b>super-project</b></h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+The <b>createProject.sh</b> script has been developed with the aim to easily create a <b>super-project</b>.
+</p>
+
+<p>
+A <b>super-project</b> is a collection of <b>sub-projects</b> generated
+by the same <b>createProject.sh</b> script. 
+</p>
+
+<p>
+All dependencies are managed, that means if you have two projects, <b>project_A</b> and <b>project_B</b> any modification of <b>project_A</b> leads to 
+a re-build of <b>project_B</b>. In the same way any dependence of <b>project_A</b> is exported to <b>project_B</b>. 
+</p>
+
+<p>
+Moreover the configuration offers <b>two ways of working</b>:
+</p>
+<ul class="org-ul">
+<li>you can build, modify&#x2026; your <b>super-project</b> with its own <b>CMakeLists.txt</b> file
+</li>
+<li>you can <b>locally</b> build, modify&#x2026; any of its <b>sub-project</b>
+</li>
+</ul>
+
+<p>
+To see how it works, go into the <b>tutorial/</b> directory and create three sub-projects, <b>project_A</b>, <b>project_B</b> and <b>project_C</b>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh" id="Create_SuperProject_subProject">../createProject.sh superProject/project_A
+../createProject.sh superProject/project_B
+../createProject.sh superProject/project_C
+</pre>
+</div>
+
+<p>
+Then you have to create your super-project <b>superProject/CMakeLists.txt</b> file, here is the code:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt" id="Create_SuperProject_CMakeLists">cmake_minimum_required(VERSION 3.0)
+project(superProject)
+
+# Your 3 sub-projects
+#
+add_subdirectory(project_A)
+add_subdirectory(project_B)
+add_subdirectory(project_C)
+
+# Target: test
+#--------------------------------------------------
+# (if you want to use a CDash board, you must define a CTestConfig.cmake file,
+#  in the superProject root directory)
+include(CTest)
+
+# Target: doc
+#--------------------------------------------------
+# Define a global "doc" target:
+# This target build sequentially project_A_doc project_B_doc and project_C_doc
+#
+add_custom_target(doc DEPENDS project_A_doc project_B_doc project_C_doc)
+</pre>
+</div>
+
+<p>
+For dependencies you have to overwrite some <b>ProjectDependencies.cmake</b> files. Lets say that <b>project_C</b> depends on <b>project_A</b> and <b>project_B</b>.
+In this simple case you only have to redefine <b>project_C/cmake/ProjectDependencies.cmake</b> with:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt" id="Create_SuperProject_C_AB"># C depends on A
+#
+if(NOT TARGET project_A)
+  find_package(project_A CONFIG REQUIRED)
+  if(NOT ${project_A_FOUND}) 
+     message(FATAL_ERROR "Did not found project_A module!")
+  endif()
+endif()
+target_link_libraries(project_C project_A)
+
+# C depends on B
+#
+if(NOT TARGET project_B)
+  find_package(project_B CONFIG REQUIRED)
+  if(NOT ${project_B_FOUND}) 
+     message(FATAL_ERROR "Did not found project_B module!")
+  endif()
+endif()
+target_link_libraries(project_C project_B)
+</pre>
+</div>
+
+<p>
+That is all!
+</p>
+
+<p>
+Now the <b>super-project</b> can be tested using the <b>check_superProject.sh</b> script.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">./check_superProject.sh
+</pre>
+</div>
+
+<p>
+This script perform exactly the same tasks that the <b>myProject</b> one:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh" id="Check_SuperProject"># Create build dir
+#
+cd superProject
+mkdir build
+cd build
+cmake ..
+
+# Check build
+#
+make
+
+# check documentation (generated by Doxygen)
+#
+make doc
+
+# check (local) install
+#
+make DESTDIR=local_install install
+
+# check test 
+#
+make test
+
+# ctest (+ cdash board)
+# -&gt; create a cdash board before
+# ctest -D Experimental
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> <span class="todo TODO">TODO</span> </h3>
+<div class="outline-text-3" id="text-1-4">
+<ul class="org-ul">
+<li>Include more examples
+</li>
+<li>Test for other configurations: cmake version, host machine&#x2026;
+</li>
+<li>Configure for SIMD, OpenMP&#x2026; however the result is maybe too oriented toward numerical applications
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Recipes for the <b>createProject.sh</b> script</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> The <b>cpp files</b></h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+We begin by creating some C++ files used to check that everything is working as expected. 
+</p>
+</div>
+
+<div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> <b>Library</b> cpp files</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+These files are needed to create the <b>OUR_PROJECT_NAME</b> library
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C" id="toRemove_git_hash.hpp">/** @file
+ *  @brief A file from the OUR_PROJECT_NAME library
+ */
+#include &lt;string&gt;
+
+namespace OUR_PROJECT_NAME {
+
+/** @brief A function that returns the git hash
+ *
+ *  Its role is to check link with @ref toRemove_OUR_PROJECT_NAME_git_hash.cpp
+ */
+std::string git_hash();
+
+} /* OUR_PROJECT_NAME */
+</pre>
+</div>
+
+<div class="org-src-container">
+
+<pre class="src src-C" id="toRemove_git_hash.cpp">#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;OUR_PROJECT_NAME/config.hpp&gt;
+
+namespace OUR_PROJECT_NAME {
+
+std::string git_hash()
+{
+    return std::string(OUR_PROJECT_NAME_GIT_REVISION);
+}
+
+} /* OUR_PROJECT_NAME */
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> <b>Executable</b> C++ file</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+This file is required to show how executables are build and <b>installed</b> in the <b>bin</b> directory
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C" id="toRemove_OUR_PROJECT_NAME_git_hash.cpp">/** @file
+ *  @brief A file from the OUR_PROJECT_NAME binary directory
+ */
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;iostream&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+/** @brief Returns the git hash
+ *
+ *  Usage:
+ *  @code
+ *  ./toRemove_OUR_PROJECT_NAME_git_hash
+ *  @endcode
+ *
+ *  @note this executable is installed in @b bin/
+ */
+int main()
+{
+    std::cout &lt;&lt; "\nCurrent git hash is " &lt;&lt; git_hash();
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-1-3" class="outline-4">
+<h4 id="sec-2-1-3"><span class="section-number-4">2.1.3</span> <b>Example</b> C++ file</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+This file is required to show how examples are build. They are <b>not</b> installed and stay in the build-tree.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-C" id="toRemove_example.cpp">/** @file
+ *  @brief A file from the OUR_PROJECT_NAME examples directory
+ *
+ *  @include toRemove_example.cpp
+ *
+ *  Also note that you can:
+ *    - include figures: @image html figures/one_figure.png
+ *
+ *    - use bibliographic reference @cite Heesch2008 
+ * 
+ */
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;iostream&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+/** @brief Returns the git hash
+ *
+ *  Usage:
+ *  @code
+ *  ./toRemove_git_hash
+ *  @endcode
+ *
+ *  @note this executable is @b not installed in @b bin/
+ */
+int main()
+{
+   std::cout &lt;&lt; "\nCurrent git hash is " &lt;&lt; git_hash();
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> <b>Doxygen</b> configuration file</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Next we define a <b>doxyfile.in</b> configuration file stored in the <b>doc/doxygen/</b> directory.
+This is only an example, you can use your own configuration, you only have to take care of the directory paths. 
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="doxyfile.in">PROJECT_NAME           = OUR_PROJECT_NAME
+PROJECT_NUMBER         = @OUR_PROJECT_NAME_VERSION@
+
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+HIDE_FRIEND_COMPOUNDS  = YES
+
+REPEAT_BRIEF           = NO
+ALWAYS_DETAILED_SEC    = NO
+
+CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/OUR_PROJECT_NAME_bibliography.bib
+
+WARN_LOGFILE           = doxygenError.txt
+
+INPUT                  = @PROJECT_SOURCE_DIR@/OUR_PROJECT_NAME \
+                         @PROJECT_SOURCE_DIR@/examples \
+                         @PROJECT_SOURCE_DIR@/bin \
+                         @PROJECT_SOURCE_DIR@/test
+
+FILE_PATTERNS          = *.hpp *.cpp
+RECURSIVE              = YES
+
+EXCLUDE_PATTERNS       =  */moc_/* */_automoc/*
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples 
+EXAMPLE_PATTERNS       = *.cpp
+EXAMPLE_RECURSIVE      = YES
+
+IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/figures/
+
+EXTRA_PACKAGES         = mathtools \
+                         amsfonts \
+                         stmaryrd
+			 
+PREDEFINED             = DOXYGEN_DOC
+SKIP_FUNCTION_MACROS   = NO
+
+COLLABORATION_GRAPH    = NO
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = NO
+</pre>
+</div>
+
+<p>
+We then have to create the corresponding <b>CMakeLists.txt</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="DoxygenCMakeList">#==================================================
+# OUR_PROJECT_NAME Doxygen "doc" target
+# Automatically generated, but never overwritten
+#==================================================
+#
+
+# Find doxygen
+#--------------------------------------------------
+
+find_package(Doxygen)
+if (NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation")
+endif()
+
+# Configure the doxyfile template 
+#--------------------------------------------------
+
+configure_file(${PROJECT_SOURCE_DIR}/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile @ONLY IMMEDIATE)
+
+# Add a custom target to run Doxygen when ever the project is built
+#--------------------------------------------------
+#   If you do want the documentation to be generated EVERY time you build the project 
+#   replace add_custom_target(doc...) by add_custom_target(doc ALL...)
+
+# CAVEAT: in case of *super-project* build we define a OUR_PROJECT_NAME_doc target
+#         instead of the usual "doc" one to avoid name collision
+# 
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+   add_custom_target(doc 
+      	             COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile
+   		     SOURCES ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile)
+else()
+   add_custom_target(OUR_PROJECT_NAME_doc 
+   	             COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile
+   		     SOURCES ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile)
+endif()
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Bibliography</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Doxygen supports <b>bibTeX</b> files. To use this feature you only have to create a <b>bibliography.bib</b> file in the <b>doc/</b> directory.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="bibliography.bib">%==================================================
+% OUR_PROJECT_NAME bibliography
+% Automatically generated, but never overwritten
+%==================================================
+%
+@Article{Heesch2008,
+  Title                    = {Doxygen: Source code documentation generator tool},
+  Author                   = {van Heesch, Dimitri},
+  Journal                  = {URL: http://www.doxygen.org},
+  Year                     = {2008}
+}
+</pre>
+</div>
+
+<p>
+You can include a citation with:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt">/*
+ * @cite Heesch2008 
+ */
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> Figures</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+We also have defined the <b>doc/figures</b> subdirectory to store figures. These figures can be included in the doxygen doc:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt">/*
+ * @image html figures/one_figure.png
+ */
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> The <b>CMakeLists.txt</b> files</h3>
+<div class="outline-text-3" id="text-2-3">
+</div><div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> <b>Main</b> CMakeLists.txt</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+The main <b>CMakeFiles.txt</b> is defined below. This is an adaptation of <a href="https://github.com/bast/cmake-example/blob/master/CMakeLists.txt"><a href="https://github.com/bast/cmake-example/blob/master/CMakeLists.txt">https://github.com/bast/cmake-example/blob/master/CMakeLists.txt</a></a>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="MainCMakeList">#**************************************************
+# A script to generate C++ project skeletons
+# Fri Jul 24 2015
+# V. Picaud,
+# https://github.com/vincent-picaud/CMakeScript
+#**************************************************
+
+#==================================================
+# Automatically generated, but never overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/blob/master/CMakeLists.txt
+#==================================================
+#
+cmake_minimum_required(VERSION 3.0)
+project(OUR_PROJECT_NAME)
+ 
+# enable fortran, c, and c++ language
+#
+enable_language(Fortran C CXX)
+
+# OUR_PROJECT_NAME version
+#
+set(OUR_PROJECT_NAME_VERSION_MAJOR 0)
+set(OUR_PROJECT_NAME_VERSION_MINOR 1)
+set(OUR_PROJECT_NAME_VERSION_PATCH 0)
+set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
+
+# Location of additional cmake modules
+#
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake
+    )
+
+# Guard against in-source builds and bad build-type strings
+#
+include(ConfigSafeGuards)
+
+# CTest and CDash stuff
+#
+include(ConfigTesting)
+
+# Example how to set c++ compiler flags for GNU
+#
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+endif()
+
+
+#--------------------------------------------------
+# Header files
+#--------------------------------------------------
+#
+
+# Get git hash
+#
+include(ConfigGitRevision)
+
+# Configure header file
+#
+configure_file(
+    ${PROJECT_SOURCE_DIR}/cmake/config.hpp.in
+    ${PROJECT_BINARY_DIR}/OUR_PROJECT_NAME/config.hpp
+    @ONLY)
+
+# Location of header files
+#
+# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/OUR_PROJECT_NAME/CMakeLists.txt 
+#         target_include_directories(...)
+#
+include_directories(
+    # search file in source directories
+    ${PROJECT_SOURCE_DIR}/
+    # otherwise try in the binary directory 
+    # (to include the generated config.hpp for instance)
+    ${PROJECT_BINARY_DIR}/
+)
+
+#--------------------------------------------------
+# Explore sub-directories
+#--------------------------------------------------
+#
+# Our OUR_PROJECT_NAME testing framework (gtest)
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+
+# Our OUR_PROJECT_NAME library build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
+
+# Our OUR_PROJECT_NAME examples build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/)
+
+# Our OUR_PROJECT_NAME executables build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/bin/)
+
+# Our OUR_PROJECT_NAME doxygen doc build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/doc/doxygen/)
+
+#--------------------------------------
+# Export and install
+#--------------------------------------
+
+# File generation
+#--------------------------------------------------
+#
+
+# ConfigVersion generation
+# From CMake doc: http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+#
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfigVersion.cmake
+  VERSION ${OUR_PROJECT_NAME_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+# Config generation
+#
+configure_file(${PROJECT_SOURCE_DIR}/cmake/OUR_PROJECT_NAMEConfig.cmake.in
+   "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfig.cmake" 
+   COPYONLY)
+
+
+# Export for build-tree direct usage
+#--------------------------------------------------
+#
+export(EXPORT OUR_PROJECT_NAMETargets
+   FILE "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMETargets.cmake"
+)
+
+# Global export in the Package Registry 
+#--------------------------------------------------
+#
+export(PACKAGE OUR_PROJECT_NAME)
+
+# Install-Export for usage after project installation
+#--------------------------------------------------
+#
+set(ConfigPackageLocation lib/cmake/OUR_PROJECT_NAME)
+install(EXPORT OUR_PROJECT_NAMETargets
+  FILE
+    OUR_PROJECT_NAMETargets.cmake
+  DESTINATION
+    ${ConfigPackageLocation}
+)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfigVersion.cmake"
+  DESTINATION
+    ${ConfigPackageLocation}
+
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> <b>Library</b> CMakeLists.txt</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="LibraryCMakeList">#==================================================
+# Build OUR_PROJECT_NAME library
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+#--------------------------------------------------
+# Collect files and define target for the library
+#--------------------------------------------------
+
+# Collect files
+# 
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_CPP *.cpp)
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_HPP *.hpp)
+
+add_library(OUR_PROJECT_NAME SHARED 
+            ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
+            ${OUR_PROJECT_NAME_LIB_SOURCE_HPP})
+
+# Target properties
+#
+set_target_properties(OUR_PROJECT_NAME 
+                      PROPERTIES PUBLIC_HEADER "${OUR_PROJECT_NAME_LIB_SOURCE_HPP}")
+
+
+# Here we define the include paths that will be used by our clients.
+# see: http://www.cmake.org/cmake/help/v3.0/command/target_include_directories.html
+# 
+# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/CMakeLists.txt include_directory(...)
+#
+target_include_directories(OUR_PROJECT_NAME PUBLIC
+	$&lt;BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/&gt;
+	$&lt;BUILD_INTERFACE:${PROJECT_BINARY_DIR}/&gt;
+	$&lt;INSTALL_INTERFACE:include/&gt;
+)
+
+# Library version
+# http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+#
+set_property(TARGET OUR_PROJECT_NAME PROPERTY VERSION ${OUR_PROJECT_NAME_VERSION})
+set_property(TARGET OUR_PROJECT_NAME PROPERTY SOVERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
+set_property(TARGET OUR_PROJECT_NAME PROPERTY INTERFACE_OUR_PROJECT_NAME_MAJOR_VERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
+set_property(TARGET OUR_PROJECT_NAME APPEND PROPERTY COMPATIBLE_INTERFACE_STRING "${OUR_PROJECT_NAME_MAJOR_VERSION}")
+
+#--------------------------------------------------
+# Include dependencies
+#--------------------------------------------------
+# You can add/remove what you need in the cmake/OUR_PROJECT_NAMEDependencies.cmake file
+#
+include(${PROJECT_SOURCE_DIR}/cmake/OUR_PROJECT_NAMEDependencies.cmake)
+
+#--------------------------------------
+# Installation
+#--------------------------------------
+
+# Install library &amp; header file
+install(TARGETS OUR_PROJECT_NAME EXPORT OUR_PROJECT_NAMETargets
+  LIBRARY DESTINATION lib/OUR_PROJECT_NAME
+  ARCHIVE DESTINATION lib/OUR_PROJECT_NAME
+  RUNTIME DESTINATION bin/OUR_PROJECT_NAME
+  PUBLIC_HEADER DESTINATION include/OUR_PROJECT_NAME
+)
+
+# Do not forget config.hpp
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/config.hpp"
+  DESTINATION
+    include/OUR_PROJECT_NAME
+)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3"><span class="section-number-4">2.3.3</span> <b>Binary</b> CMakeLists.txt</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="BinCMakeLists.txt">#==================================================
+# Build OUR_PROJECT_NAME executables
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# Collect files
+# --------------------------------------------------
+#
+file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
+
+# For each executables
+# --------------------------------------------------
+#
+foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
+
+# Build it!
+#
+get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+# Avoid name collision 
+# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
+set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+
+# Install (&amp; Export) for external usage
+#
+install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} 
+        EXPORT OUR_PROJECT_NAMETargets
+        RUNTIME DESTINATION bin)
+endforeach()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4"><span class="section-number-4">2.3.4</span> <b>Examples</b> CMakeLists.txt</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="ExampleCMakeList">#==================================================
+# OUR_PROJECT_NAME executables
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# Collect files
+# --------------------------------------------------
+#
+file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
+
+# For each examples
+# --------------------------------------------------
+#
+foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
+
+# Build it!
+#
+get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+# Avoid name collision 
+# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
+set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+
+# CAVEAT: no installation, examples are not exported from the build-tree
+#
+endforeach()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-5" class="outline-4">
+<h4 id="sec-2-3-5"><span class="section-number-4">2.3.5</span> <b>GTest/CTest</b> CMakeLists.txt</h4>
+<div class="outline-text-4" id="text-2-3-5">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="GTestCMakeList">#==================================================
+# OUR_PROJECT_NAME unit tests
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# find GTest
+#--------------------------------------------------
+
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+# Generate tests and associated targets
+#--------------------------------------------------
+file(GLOB_RECURSE ALL_TESTS_CPP *.cpp)
+
+foreach(ONE_TEST_CPP ${ALL_TESTS_CPP})
+   # Build it!
+   #
+   get_filename_component(ONE_TEST_EXEC ${ONE_TEST_CPP} NAME_WE)
+   # Avoid name collision 
+   # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+   add_executable(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_CPP})
+   set_target_properties(OUR_PROJECT_NAME_${ONE_TEST_EXEC} PROPERTIES OUTPUT_NAME ${ONE_TEST_EXEC}) 
+   target_link_libraries(OUR_PROJECT_NAME_${ONE_TEST_EXEC} 
+                         OUR_PROJECT_NAME
+                         ${GTEST_BOTH_LIBRARIES}
+                         ${CMAKE_THREAD_LIBS_INIT})
+   # CTest
+   add_test(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_EXEC})
+endforeach()
+</pre>
+</div>
+
+<p>
+Define a trivial test used to check that everything is okay:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-txt" id="toRemove_check_git_hash.cpp">#include "gtest/gtest.h"
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+TEST(Demo,Trivial) {
+   EXPECT_TRUE(true);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-6" class="outline-4">
+<h4 id="sec-2-3-6"><span class="section-number-4">2.3.6</span> The <b>cmake/</b> directory</h4>
+<div class="outline-text-4" id="text-2-3-6">
+<p>
+Again a major source of inspiration was <a href="https://github.com/bast/cmake-example/blob/master/CMakeLists.txt">https://github.com/bast/cmake-example/blob/master/CMakeLists.txt</a>.
+</p>
+</div>
+
+<ol class="org-ol"><li><a id="sec-2-3-6-1" name="sec-2-3-6-1"></a>The <b>CTestConfig.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-1">
+<p>
+This file must be in the project <b>root</b> directory.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="CTestConfig.cmake">#==================================================
+# Automatically generated, but not overwritten
+#==================================================
+
+set(CTEST_PROJECT_NAME       "OUR_PROJECT_NAME")
+set(CTEST_NIGHTLY_START_TIME "00:00:00 CEST")
+set(CTEST_DROP_METHOD        "http")
+set(CTEST_DROP_SITE          "my.cdash.org")
+set(CTEST_DROP_LOCATION      "/submit.php?project=OUR_PROJECT_NAME")
+set(CTEST_DROP_SITE_CDASH    TRUE)
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 200)
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-2" name="sec-2-3-6-2"></a><a id="project-dependencies" name="project-dependencies"></a> The <b>ProjectDependencies.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-2">
+<p>
+The <b>OUR_PROJECT_NAMEDependencies.cmake</b> file contains your project dependencies. This is an important file and you have to modify it for your own needs.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="ProjectDependencies.cmake">#==================================================
+# OUR_PROJECT_NAME dependencies
+# Automatically generated, but not overwritten, 
+#
+# Modify me to add your project dependencies!
+#==================================================
+
+#--------------------------------------------------
+# Dependency examples:
+#--------------------------------------------------
+
+# Sub-project dependence
+#--------------------------------------------------
+# For a "Super-Project" containing projectUpstream and OUR_PROJECT_NAME,
+# if OUR_PROJECT_NAME depends on projectUpstream, simply uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# if(NOT TARGET projectUpstream)
+# find_package(projectUpstream CONFIG REQUIRED)
+# if(NOT ${projectUpstream_FOUND}) 
+#    message(FATAL_ERROR "Did not found projectUpstream module!")
+# endif()
+# endif()
+# target_link_libraries(OUR_PROJECT_NAME projectUpstream)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Note: the role of the if(NOT TARGET projectUpstream) guard is only relevant in case
+#       of super-project build where "projectUpstream" is included by add_subdirectory
+#       from a master CMakeLists.txt file.
+#       In that case the file projectUpstreamTargets.cmake is not yet generated and
+#       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
+#       error. However the target projectUpstream is already available.
+
+# BLAS
+#--------------------------------------------------
+# If you project depends on BLAS, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#enable_language(Fortran)
+#find_package(BLAS REQUIRED)
+#include_directories(${BLAS_INCLUDE_DIRS})
+#target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+#target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Qt5
+#--------------------------------------------------
+# If you project depends on Qt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set(CMAKE_AUTOMOC ON)
+# set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# # CAVEAT:
+# # When Qt is used, it may be important to use POSITION_INDEPENDENT_CODE property to avoid error message like:
+# #       &gt;&gt; You must build your code with position independent code if Qt was built with -reduce-relocations. 
+# #          Compile your code with -fPIC (-fPIE is not enough). &lt;&lt;
+# # (see: http://qt.apidoc.info/5.2.0/qtdoc/cmake-manual.html)
+# #
+# set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#
+# find_package(Qt5Widgets REQUIRED)
+# # Add dependency 
+# include_directories(${Qt5Widgets_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
+# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_LIBRARIES}) but
+# get_target_property(QtWidgets_location Qt5::Widgets LOCATION)
+# # as described in http://doc.qt.io/qt-5/cmake-manual.html
+# target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_location})
+#
+# find_package(Qt5Core REQUIRED)
+# # Add dependency 
+# include_directories(${Qt5Core_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Core_INCLUDE_DIRS})
+# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_LIBRARIES}), but
+# get_target_property(QtCore_location Qt5::Core LOCATION)
+# # as described in http://doc.qt.io/qt-5/cmake-manual.html
+# target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_location})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Qwt
+#--------------------------------------------------
+# If you project depends on Qwt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(Qwt REQUIRED)
+# include_directories(${QWT_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${QWT_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CAVEAT: you must add your own FindQwt.cmake in 
+#         the OUR_PROJECT_NAME/cmake directory
+#         You can find one at:
+#         http://www.cmake.org/Wiki/CMakeUserFindQwt
+#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-3" name="sec-2-3-6-3"></a>The <b>ConfigTesting.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-3">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="ConfigTesting.cmake">#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+# set cdash buildname
+set(BUILDNAME
+    "${CMAKE_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}-${CMAKE_Fortran_COMPILER_ID}-${cmake_build_type_tolower}"
+    CACHE STRING
+    "Name of build on the dashboard"
+    )
+
+# The following are required to uses Dart and the CDash dashboard
+include(CTest)
+enable_testing()
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-4" name="sec-2-3-6-4"></a>The <b>OurProjectNameConfig.cmake.in</b> file<br  /><div class="outline-text-5" id="text-2-3-6-4">
+<p>
+For more tuning you can modify this file.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-txt" id="OurProjectNameConfig.cmake.in">#==================================================
+# Automatically generated, but not overwritten
+#==================================================
+# see: http://www.cmake.org/cmake/help/v3.0/variable/CMAKE_CURRENT_LIST_DIR.html
+#      http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+
+include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-5" name="sec-2-3-6-5"></a><a id="in-source-build" name="in-source-build"></a> The <b>ConfigSafeGuards.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-5">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="ConfigSafeGuards.cmake">#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+
+# guard against in-source builds
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+    message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
+endif()
+
+# guard against bad build-type strings
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
+string(TOUPPER "${CMAKE_BUILD_TYPE}" cmake_build_type_toupper)
+if(    NOT cmake_build_type_tolower STREQUAL "debug"
+   AND NOT cmake_build_type_tolower STREQUAL "release"
+   AND NOT cmake_build_type_tolower STREQUAL "profile"
+   AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
+      message(FATAL_ERROR "Unknown build type \"${CMAKE_BUILD_TYPE}\". Allowed values are Debug, Release, Profile, RelWithDebInfo (case-insensitive).")
+endif()
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-6" name="sec-2-3-6-6"></a>The <b>FindGit.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-6">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="FindGit.cmake">#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+find_program(
+    GIT_EXECUTABLE
+    NAMES git
+    DOC "git command line client"
+    )
+mark_as_advanced(GIT_EXECUTABLE)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Git DEFAULT_MSG GIT_EXECUTABLE)
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-7" name="sec-2-3-6-7"></a>The <b>ConfigGitRevision.cmake</b> file<br  /><div class="outline-text-5" id="text-2-3-6-7">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="ConfigGitRevision.cmake">#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+find_package(Git)
+if(GIT_FOUND)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list --max-count=1 HEAD
+        OUTPUT_VARIABLE OUR_PROJECT_NAME_GIT_REVISION
+        ERROR_QUIET
+        )
+    if(NOT ${OUR_PROJECT_NAME_GIT_REVISION} STREQUAL "")
+        string(STRIP ${OUR_PROJECT_NAME_GIT_REVISION} OUR_PROJECT_NAME_GIT_REVISION)
+    endif()
+    message(STATUS "Current git revision is ${OUR_PROJECT_NAME_GIT_REVISION}")
+else()
+    set(OUR_PROJECT_NAME_GIT_REVISION "unknown")
+endif()
+</pre>
+</div>
+</div>
+</li>
+
+<li><a id="sec-2-3-6-8" name="sec-2-3-6-8"></a>The <b>config.hpp.in</b> file<br  /><div class="outline-text-5" id="text-2-3-6-8">
+<div class="org-src-container">
+
+<pre class="src src-txt" id="config.hpp.in">//==================================================
+// Automatically generated, but not overwritten
+//==================================================
+// CAVEAT: config.hpp.in is never overwritten, but config.hpp is!
+//
+
+/** @file 
+ *  @brief OUR_PROJECT_NAME configuration file
+ *  
+ *  @attention automatically generated from @b config.hpp.in, do not modify!
+ */
+
+#define OUR_PROJECT_NAME_VERSION_MAJOR @OUR_PROJECT_NAME_VERSION_MAJOR@  
+#define OUR_PROJECT_NAME_VERSION_MINOR @OUR_PROJECT_NAME_VERSION_MINOR@
+#define OUR_PROJECT_NAME_VERSION_PATCH @OUR_PROJECT_NAME_VERSION_PATCH@
+
+const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
+
+#define OUR_PROJECT_NAME_SYSTEM_NAME @CMAKE_SYSTEM_NAME@
+#define OUR_PROJECT_NAME_HOST_SYSTEM_PROCESSOR @CMAKE_HOST_SYSTEM_PROCESSOR@
+</pre>
+</div>
+</div>
+</li></ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Catalog of <b>shell scripts</b></h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Contains full listings of the automatically generated scripts.
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> The <b>tutorial</b> scripts</h3>
+<div class="outline-text-3" id="text-3-1">
+</div><div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> A simple <b>project</b></h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+The <b>tutorial/create_myProject.sh</b> is defined by:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">../createProject.sh myProject
+</pre>
+</div>
+
+<p>
+The <b>tutorial/check_myProject.sh</b> is defined by:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"># Create build dir
+#
+cd myProject
+mkdir build
+cd build
+cmake ..
+
+# Check build
+#
+make
+
+# Check documentation (generated by Doxygen)
+# (open myProject/build/doc/doxygen/index.html with your web browser)
+#
+make doc
+
+# Check (local) install
+#
+make DESTDIR=local_install install
+
+# check test 
+#
+make test
+
+# ctest (+ cdash board)
+# 
+ctest -D Experimental
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2"><span class="section-number-4">3.1.2</span> A simple <b>super-project</b></h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+The <b>tutorial/create_superProject.sh</b> is defined by:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">../createProject.sh superProject/project_A
+../createProject.sh superProject/project_B
+../createProject.sh superProject/project_C
+
+project_path=./
+project_name=superProject
+
+current_file=${project_path}/${project_name}/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+cmake_minimum_required(VERSION 3.0)
+project(superProject)
+
+# Your 3 sub-projects
+#
+add_subdirectory(project_A)
+add_subdirectory(project_B)
+add_subdirectory(project_C)
+
+# Target: test
+#--------------------------------------------------
+# (if you want to use a CDash board, you must define a CTestConfig.cmake file,
+#  in the superProject root directory)
+include(CTest)
+
+# Target: doc
+#--------------------------------------------------
+# Define a global "doc" target:
+# This target build sequentially project_A_doc project_B_doc and project_C_doc
+#
+add_custom_target(doc DEPENDS project_A_doc project_B_doc project_C_doc)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+fi
+
+#==================================================
+
+current_file=${project_path}/${project_name}/project_C/cmake/project_CDependencies.cmake
+#
+# CAVEAT: here, for the example, we must overwrite!
+#
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+# C depends on A
+#
+if(NOT TARGET project_A)
+  find_package(project_A CONFIG REQUIRED)
+  if(NOT ${project_A_FOUND}) 
+     message(FATAL_ERROR "Did not found project_A module!")
+  endif()
+endif()
+target_link_libraries(project_C project_A)
+
+# C depends on B
+#
+if(NOT TARGET project_B)
+  find_package(project_B CONFIG REQUIRED)
+  if(NOT ${project_B_FOUND}) 
+     message(FATAL_ERROR "Did not found project_B module!")
+  endif()
+endif()
+target_link_libraries(project_C project_B)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+</pre>
+</div>
+
+<p>
+The <b>tutorial/check_superProject.sh</b> is defined by:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"># Create build dir
+#
+cd superProject
+mkdir build
+cd build
+cmake ..
+
+# Check build
+#
+make
+
+# check documentation (generated by Doxygen)
+#
+make doc
+
+# check (local) install
+#
+make DESTDIR=local_install install
+
+# check test 
+#
+make test
+
+# ctest (+ cdash board)
+# -&gt; create a cdash board before
+# ctest -D Experimental
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> The <b>createProject.sh</b> script</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+The main script <b>createProject.sh</b> that allows automatic generation of project is defined by:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">#**************************************************
+# A script to generate C++ project skeletons
+# Fri Jul 24 2015
+# V. Picaud,
+# https://github.com/vincent-picaud/CMakeScript
+#**************************************************
+
+if [ "$#" -ne 1 ]; then
+    echo -e "\\n\\nUsage is:\\n" $0 " project_name\\n"
+    exit -1
+fi
+
+echo -e "Create C++ project skeleton: $1"
+
+project_name=$(basename "$1" | tr -st ' ' '_' )
+project_path=$(dirname "$1")
+
+#**************************************************
+# Create all CMakeLists.txt files
+#**************************************************
+#
+
+current_file=${project_path}/${project_name}/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#**************************************************
+# A script to generate C++ project skeletons
+# Fri Jul 24 2015
+# V. Picaud,
+# https://github.com/vincent-picaud/CMakeScript
+#**************************************************
+
+#==================================================
+# Automatically generated, but never overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/blob/master/CMakeLists.txt
+#==================================================
+#
+cmake_minimum_required(VERSION 3.0)
+project(OUR_PROJECT_NAME)
+ 
+# enable fortran, c, and c++ language
+#
+enable_language(Fortran C CXX)
+
+# OUR_PROJECT_NAME version
+#
+set(OUR_PROJECT_NAME_VERSION_MAJOR 0)
+set(OUR_PROJECT_NAME_VERSION_MINOR 1)
+set(OUR_PROJECT_NAME_VERSION_PATCH 0)
+set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
+
+# Location of additional cmake modules
+#
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake
+    )
+
+# Guard against in-source builds and bad build-type strings
+#
+include(ConfigSafeGuards)
+
+# CTest and CDash stuff
+#
+include(ConfigTesting)
+
+# Example how to set c++ compiler flags for GNU
+#
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
+    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+endif()
+
+
+#--------------------------------------------------
+# Header files
+#--------------------------------------------------
+#
+
+# Get git hash
+#
+include(ConfigGitRevision)
+
+# Configure header file
+#
+configure_file(
+    ${PROJECT_SOURCE_DIR}/cmake/config.hpp.in
+    ${PROJECT_BINARY_DIR}/OUR_PROJECT_NAME/config.hpp
+    @ONLY)
+
+# Location of header files
+#
+# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/OUR_PROJECT_NAME/CMakeLists.txt 
+#         target_include_directories(...)
+#
+include_directories(
+    # search file in source directories
+    ${PROJECT_SOURCE_DIR}/
+    # otherwise try in the binary directory 
+    # (to include the generated config.hpp for instance)
+    ${PROJECT_BINARY_DIR}/
+)
+
+#--------------------------------------------------
+# Explore sub-directories
+#--------------------------------------------------
+#
+# Our OUR_PROJECT_NAME testing framework (gtest)
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+
+# Our OUR_PROJECT_NAME library build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
+
+# Our OUR_PROJECT_NAME examples build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/examples/)
+
+# Our OUR_PROJECT_NAME executables build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/bin/)
+
+# Our OUR_PROJECT_NAME doxygen doc build
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/doc/doxygen/)
+
+#--------------------------------------
+# Export and install
+#--------------------------------------
+
+# File generation
+#--------------------------------------------------
+#
+
+# ConfigVersion generation
+# From CMake doc: http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+#
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfigVersion.cmake
+  VERSION ${OUR_PROJECT_NAME_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+# Config generation
+#
+configure_file(${PROJECT_SOURCE_DIR}/cmake/OUR_PROJECT_NAMEConfig.cmake.in
+   "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfig.cmake" 
+   COPYONLY)
+
+
+# Export for build-tree direct usage
+#--------------------------------------------------
+#
+export(EXPORT OUR_PROJECT_NAMETargets
+   FILE "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMETargets.cmake"
+)
+
+# Global export in the Package Registry 
+#--------------------------------------------------
+#
+export(PACKAGE OUR_PROJECT_NAME)
+
+# Install-Export for usage after project installation
+#--------------------------------------------------
+#
+set(ConfigPackageLocation lib/cmake/OUR_PROJECT_NAME)
+install(EXPORT OUR_PROJECT_NAMETargets
+  FILE
+    OUR_PROJECT_NAMETargets.cmake
+  DESTINATION
+    ${ConfigPackageLocation}
+)
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfigVersion.cmake"
+  DESTINATION
+    ${ConfigPackageLocation}
+
+)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/${project_name}/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Build OUR_PROJECT_NAME library
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+#--------------------------------------------------
+# Collect files and define target for the library
+#--------------------------------------------------
+
+# Collect files
+# 
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_CPP *.cpp)
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_HPP *.hpp)
+
+add_library(OUR_PROJECT_NAME SHARED 
+            ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
+            ${OUR_PROJECT_NAME_LIB_SOURCE_HPP})
+
+# Target properties
+#
+set_target_properties(OUR_PROJECT_NAME 
+                      PROPERTIES PUBLIC_HEADER "${OUR_PROJECT_NAME_LIB_SOURCE_HPP}")
+
+
+# Here we define the include paths that will be used by our clients.
+# see: http://www.cmake.org/cmake/help/v3.0/command/target_include_directories.html
+# 
+# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/CMakeLists.txt include_directory(...)
+#
+target_include_directories(OUR_PROJECT_NAME PUBLIC
+	$&lt;BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/&gt;
+	$&lt;BUILD_INTERFACE:${PROJECT_BINARY_DIR}/&gt;
+	$&lt;INSTALL_INTERFACE:include/&gt;
+)
+
+# Library version
+# http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+#
+set_property(TARGET OUR_PROJECT_NAME PROPERTY VERSION ${OUR_PROJECT_NAME_VERSION})
+set_property(TARGET OUR_PROJECT_NAME PROPERTY SOVERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
+set_property(TARGET OUR_PROJECT_NAME PROPERTY INTERFACE_OUR_PROJECT_NAME_MAJOR_VERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
+set_property(TARGET OUR_PROJECT_NAME APPEND PROPERTY COMPATIBLE_INTERFACE_STRING "${OUR_PROJECT_NAME_MAJOR_VERSION}")
+
+#--------------------------------------------------
+# Include dependencies
+#--------------------------------------------------
+# You can add/remove what you need in the cmake/OUR_PROJECT_NAMEDependencies.cmake file
+#
+include(${PROJECT_SOURCE_DIR}/cmake/OUR_PROJECT_NAMEDependencies.cmake)
+
+#--------------------------------------
+# Installation
+#--------------------------------------
+
+# Install library &amp; header file
+install(TARGETS OUR_PROJECT_NAME EXPORT OUR_PROJECT_NAMETargets
+  LIBRARY DESTINATION lib/OUR_PROJECT_NAME
+  ARCHIVE DESTINATION lib/OUR_PROJECT_NAME
+  RUNTIME DESTINATION bin/OUR_PROJECT_NAME
+  PUBLIC_HEADER DESTINATION include/OUR_PROJECT_NAME
+)
+
+# Do not forget config.hpp
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/config.hpp"
+  DESTINATION
+    include/OUR_PROJECT_NAME
+)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/bin/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Build OUR_PROJECT_NAME executables
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# Collect files
+# --------------------------------------------------
+#
+file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
+
+# For each executables
+# --------------------------------------------------
+#
+foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
+
+# Build it!
+#
+get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+# Avoid name collision 
+# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
+set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+
+# Install (&amp; Export) for external usage
+#
+install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} 
+        EXPORT OUR_PROJECT_NAMETargets
+        RUNTIME DESTINATION bin)
+endforeach()
+
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# Read only
+#
+chmod 0444 "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/examples/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# OUR_PROJECT_NAME executables
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# Collect files
+# --------------------------------------------------
+#
+file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
+
+# For each examples
+# --------------------------------------------------
+#
+foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
+
+# Build it!
+#
+get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+# Avoid name collision 
+# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
+set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+
+# CAVEAT: no installation, examples are not exported from the build-tree
+#
+endforeach()
+
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/doc/doxygen/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# OUR_PROJECT_NAME Doxygen "doc" target
+# Automatically generated, but never overwritten
+#==================================================
+#
+
+# Find doxygen
+#--------------------------------------------------
+
+find_package(Doxygen)
+if (NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation")
+endif()
+
+# Configure the doxyfile template 
+#--------------------------------------------------
+
+configure_file(${PROJECT_SOURCE_DIR}/doc/doxygen/doxyfile.in ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile @ONLY IMMEDIATE)
+
+# Add a custom target to run Doxygen when ever the project is built
+#--------------------------------------------------
+#   If you do want the documentation to be generated EVERY time you build the project 
+#   replace add_custom_target(doc...) by add_custom_target(doc ALL...)
+
+# CAVEAT: in case of *super-project* build we define a OUR_PROJECT_NAME_doc target
+#         instead of the usual "doc" one to avoid name collision
+# 
+if(${PROJECT_SOURCE_DIR} STREQUAL ${CMAKE_SOURCE_DIR})
+   add_custom_target(doc 
+      	             COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile
+   		     SOURCES ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile)
+else()
+   add_custom_target(OUR_PROJECT_NAME_doc 
+   	             COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile
+   		     SOURCES ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile)
+endif()
+
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/test/CMakeLists.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# OUR_PROJECT_NAME unit tests
+# Automatically generated, but not overwritten
+#==================================================
+#
+
+# find GTest
+#--------------------------------------------------
+
+find_package(Threads REQUIRED)
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
+
+# Generate tests and associated targets
+#--------------------------------------------------
+file(GLOB_RECURSE ALL_TESTS_CPP *.cpp)
+
+foreach(ONE_TEST_CPP ${ALL_TESTS_CPP})
+   # Build it!
+   #
+   get_filename_component(ONE_TEST_EXEC ${ONE_TEST_CPP} NAME_WE)
+   # Avoid name collision 
+   # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+   add_executable(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_CPP})
+   set_target_properties(OUR_PROJECT_NAME_${ONE_TEST_EXEC} PROPERTIES OUTPUT_NAME ${ONE_TEST_EXEC}) 
+   target_link_libraries(OUR_PROJECT_NAME_${ONE_TEST_EXEC} 
+                         OUR_PROJECT_NAME
+                         ${GTEST_BOTH_LIBRARIES}
+                         ${CMAKE_THREAD_LIBS_INIT})
+   # CTest
+   add_test(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_EXEC})
+endforeach()
+
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+# Create all C++ files
+#**************************************************
+
+current_file=${project_path}/${project_name}/test/toRemove_check_git_hash.cpp
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#include "gtest/gtest.h"
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+TEST(Demo,Trivial) {
+   EXPECT_TRUE(true);
+}
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/${project_name}/toRemove_git_hash.hpp
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+/** @file
+ *  @brief A file from the OUR_PROJECT_NAME library
+ */
+#include &lt;string&gt;
+
+namespace OUR_PROJECT_NAME {
+
+/** @brief A function that returns the git hash
+ *
+ *  Its role is to check link with @ref toRemove_OUR_PROJECT_NAME_git_hash.cpp
+ */
+std::string git_hash();
+
+} /* OUR_PROJECT_NAME */
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/${project_name}/toRemove_git_hash.cpp
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;OUR_PROJECT_NAME/config.hpp&gt;
+
+namespace OUR_PROJECT_NAME {
+
+std::string git_hash()
+{
+    return std::string(OUR_PROJECT_NAME_GIT_REVISION);
+}
+
+} /* OUR_PROJECT_NAME */
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/bin/toRemove_${project_name}_git_hash.cpp
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+/** @file
+ *  @brief A file from the OUR_PROJECT_NAME binary directory
+ */
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;iostream&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+/** @brief Returns the git hash
+ *
+ *  Usage:
+ *  @code
+ *  ./toRemove_OUR_PROJECT_NAME_git_hash
+ *  @endcode
+ *
+ *  @note this executable is installed in @b bin/
+ */
+int main()
+{
+    std::cout &lt;&lt; "\nCurrent git hash is " &lt;&lt; git_hash();
+}
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/examples/toRemove_example.cpp
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+/** @file
+ *  @brief A file from the OUR_PROJECT_NAME examples directory
+ *
+ *  @include toRemove_example.cpp
+ *
+ *  Also note that you can:
+ *    - include figures: @image html figures/one_figure.png
+ *
+ *    - use bibliographic reference @cite Heesch2008 
+ * 
+ */
+#include &lt;OUR_PROJECT_NAME/toRemove_git_hash.hpp&gt;
+#include &lt;iostream&gt;
+
+using namespace OUR_PROJECT_NAME;
+
+/** @brief Returns the git hash
+ *
+ *  Usage:
+ *  @code
+ *  ./toRemove_git_hash
+ *  @endcode
+ *
+ *  @note this executable is @b not installed in @b bin/
+ */
+int main()
+{
+   std::cout &lt;&lt; "\nCurrent git hash is " &lt;&lt; git_hash();
+}
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+# Create Doc stuff
+#**************************************************
+#
+current_file=${project_path}/${project_name}/doc/doxygen/doxyfile.in
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+PROJECT_NAME           = OUR_PROJECT_NAME
+PROJECT_NUMBER         = @OUR_PROJECT_NAME_VERSION@
+
+HIDE_UNDOC_MEMBERS     = YES
+HIDE_UNDOC_CLASSES     = YES
+HIDE_FRIEND_COMPOUNDS  = YES
+
+REPEAT_BRIEF           = NO
+ALWAYS_DETAILED_SEC    = NO
+
+CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/OUR_PROJECT_NAME_bibliography.bib
+
+WARN_LOGFILE           = doxygenError.txt
+
+INPUT                  = @PROJECT_SOURCE_DIR@/OUR_PROJECT_NAME \
+                         @PROJECT_SOURCE_DIR@/examples \
+                         @PROJECT_SOURCE_DIR@/bin \
+                         @PROJECT_SOURCE_DIR@/test
+
+FILE_PATTERNS          = *.hpp *.cpp
+RECURSIVE              = YES
+
+EXCLUDE_PATTERNS       =  */moc_/* */_automoc/*
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples 
+EXAMPLE_PATTERNS       = *.cpp
+EXAMPLE_RECURSIVE      = YES
+
+IMAGE_PATH             = @PROJECT_SOURCE_DIR@/doc/figures/
+
+EXTRA_PACKAGES         = mathtools \
+                         amsfonts \
+                         stmaryrd
+			 
+PREDEFINED             = DOXYGEN_DOC
+SKIP_FUNCTION_MACROS   = NO
+
+COLLABORATION_GRAPH    = NO
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = NO
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# CAVEAT: Doxygen update doxyfile.in
+#
+#doxygen -u "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/doc/${project_name}_bibliography.bib
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+%==================================================
+% OUR_PROJECT_NAME bibliography
+% Automatically generated, but never overwritten
+%==================================================
+%
+@Article{Heesch2008,
+  Title                    = {Doxygen: Source code documentation generator tool},
+  Author                   = {van Heesch, Dimitri},
+  Journal                  = {URL: http://www.doxygen.org},
+  Year                     = {2008}
+}
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#==================================================
+# OUR_PROJECT_NAME/doc/figures subdirectory
+#==================================================
+#
+current_file=${project_path}/${project_name}/doc/figures/readme.txt
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+Put your figures here (one_figure.png file for instance)
+
+They can be included in the doxygen doc with:
+
+/*
+
+ ...
+
+ * @image html figures/one_figure.png
+
+ ...
+
+ */
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+# Create the OUR_PROJECT_NAME/cmake/ files.
+#**************************************************
+#
+current_file=${project_path}/${project_name}/cmake/${project_name}Config.cmake.in
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#==================================================
+# see: http://www.cmake.org/cmake/help/v3.0/variable/CMAKE_CURRENT_LIST_DIR.html
+#      http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
+
+include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/${project_name}Dependencies.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# OUR_PROJECT_NAME dependencies
+# Automatically generated, but not overwritten, 
+#
+# Modify me to add your project dependencies!
+#==================================================
+
+#--------------------------------------------------
+# Dependency examples:
+#--------------------------------------------------
+
+# Sub-project dependence
+#--------------------------------------------------
+# For a "Super-Project" containing projectUpstream and OUR_PROJECT_NAME,
+# if OUR_PROJECT_NAME depends on projectUpstream, simply uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# if(NOT TARGET projectUpstream)
+# find_package(projectUpstream CONFIG REQUIRED)
+# if(NOT ${projectUpstream_FOUND}) 
+#    message(FATAL_ERROR "Did not found projectUpstream module!")
+# endif()
+# endif()
+# target_link_libraries(OUR_PROJECT_NAME projectUpstream)
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Note: the role of the if(NOT TARGET projectUpstream) guard is only relevant in case
+#       of super-project build where "projectUpstream" is included by add_subdirectory
+#       from a master CMakeLists.txt file.
+#       In that case the file projectUpstreamTargets.cmake is not yet generated and
+#       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
+#       error. However the target projectUpstream is already available.
+
+# BLAS
+#--------------------------------------------------
+# If you project depends on BLAS, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#enable_language(Fortran)
+#find_package(BLAS REQUIRED)
+#include_directories(${BLAS_INCLUDE_DIRS})
+#target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+#target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Qt5
+#--------------------------------------------------
+# If you project depends on Qt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# set(CMAKE_AUTOMOC ON)
+# set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# # CAVEAT:
+# # When Qt is used, it may be important to use POSITION_INDEPENDENT_CODE property to avoid error message like:
+# #       &gt;&gt; You must build your code with position independent code if Qt was built with -reduce-relocations. 
+# #          Compile your code with -fPIC (-fPIE is not enough). &lt;&lt;
+# # (see: http://qt.apidoc.info/5.2.0/qtdoc/cmake-manual.html)
+# #
+# set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+#
+# find_package(Qt5Widgets REQUIRED)
+# # Add dependency 
+# include_directories(${Qt5Widgets_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
+# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_LIBRARIES}) but
+# get_target_property(QtWidgets_location Qt5::Widgets LOCATION)
+# # as described in http://doc.qt.io/qt-5/cmake-manual.html
+# target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_location})
+#
+# find_package(Qt5Core REQUIRED)
+# # Add dependency 
+# include_directories(${Qt5Core_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Core_INCLUDE_DIRS})
+# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_LIBRARIES}), but
+# get_target_property(QtCore_location Qt5::Core LOCATION)
+# # as described in http://doc.qt.io/qt-5/cmake-manual.html
+# target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_location})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# Qwt
+#--------------------------------------------------
+# If you project depends on Qwt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(Qwt REQUIRED)
+# include_directories(${QWT_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${QWT_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# CAVEAT: you must add your own FindQwt.cmake in 
+#         the OUR_PROJECT_NAME/cmake directory
+#         You can find one at:
+#         http://www.cmake.org/Wiki/CMakeUserFindQwt
+#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/CTestConfig.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#==================================================
+
+set(CTEST_PROJECT_NAME       "OUR_PROJECT_NAME")
+set(CTEST_NIGHTLY_START_TIME "00:00:00 CEST")
+set(CTEST_DROP_METHOD        "http")
+set(CTEST_DROP_SITE          "my.cdash.org")
+set(CTEST_DROP_LOCATION      "/submit.php?project=OUR_PROJECT_NAME")
+set(CTEST_DROP_SITE_CDASH    TRUE)
+set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 200)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/ConfigTesting.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+# set cdash buildname
+set(BUILDNAME
+    "${CMAKE_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}-${CMAKE_Fortran_COMPILER_ID}-${cmake_build_type_tolower}"
+    CACHE STRING
+    "Name of build on the dashboard"
+    )
+
+# The following are required to uses Dart and the CDash dashboard
+include(CTest)
+enable_testing()
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/ConfigSafeGuards.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+
+# guard against in-source builds
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
+    message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there.")
+endif()
+
+# guard against bad build-type strings
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
+string(TOLOWER "${CMAKE_BUILD_TYPE}" cmake_build_type_tolower)
+string(TOUPPER "${CMAKE_BUILD_TYPE}" cmake_build_type_toupper)
+if(    NOT cmake_build_type_tolower STREQUAL "debug"
+   AND NOT cmake_build_type_tolower STREQUAL "release"
+   AND NOT cmake_build_type_tolower STREQUAL "profile"
+   AND NOT cmake_build_type_tolower STREQUAL "relwithdebinfo")
+      message(FATAL_ERROR "Unknown build type \"${CMAKE_BUILD_TYPE}\". Allowed values are Debug, Release, Profile, RelWithDebInfo (case-insensitive).")
+endif()
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# Read only
+#
+chmod 0444 "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/FindGit.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+find_program(
+    GIT_EXECUTABLE
+    NAMES git
+    DOC "git command line client"
+    )
+mark_as_advanced(GIT_EXECUTABLE)
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Git DEFAULT_MSG GIT_EXECUTABLE)
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# Read only
+#
+chmod 0444 "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/ConfigGitRevision.cmake
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+#==================================================
+# Automatically generated, but not overwritten
+#
+# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
+#==================================================
+#
+find_package(Git)
+if(GIT_FOUND)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-list --max-count=1 HEAD
+        OUTPUT_VARIABLE OUR_PROJECT_NAME_GIT_REVISION
+        ERROR_QUIET
+        )
+    if(NOT ${OUR_PROJECT_NAME_GIT_REVISION} STREQUAL "")
+        string(STRIP ${OUR_PROJECT_NAME_GIT_REVISION} OUR_PROJECT_NAME_GIT_REVISION)
+    endif()
+    message(STATUS "Current git revision is ${OUR_PROJECT_NAME_GIT_REVISION}")
+else()
+    set(OUR_PROJECT_NAME_GIT_REVISION "unknown")
+endif()
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# Read only
+#
+chmod 0444 "${current_file}"
+fi
+
+#**************************************************
+
+current_file=${project_path}/${project_name}/cmake/config.hpp.in
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir=$(dirname "${current_file}")
+
+mkdir -p ${current_file_dir}
+echo "${current_file}" 1&gt;&amp;2
+more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+//==================================================
+// Automatically generated, but not overwritten
+//==================================================
+// CAVEAT: config.hpp.in is never overwritten, but config.hpp is!
+//
+
+/** @file 
+ *  @brief OUR_PROJECT_NAME configuration file
+ *  
+ *  @attention automatically generated from @b config.hpp.in, do not modify!
+ */
+
+#define OUR_PROJECT_NAME_VERSION_MAJOR @OUR_PROJECT_NAME_VERSION_MAJOR@  
+#define OUR_PROJECT_NAME_VERSION_MINOR @OUR_PROJECT_NAME_VERSION_MINOR@
+#define OUR_PROJECT_NAME_VERSION_PATCH @OUR_PROJECT_NAME_VERSION_PATCH@
+
+const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
+
+#define OUR_PROJECT_NAME_SYSTEM_NAME @CMAKE_SYSTEM_NAME@
+#define OUR_PROJECT_NAME_HOST_SYSTEM_PROCESSOR @CMAKE_HOST_SYSTEM_PROCESSOR@
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#
+# Read only
+#
+chmod 0444 "${current_file}"
+fi
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> The <b>createEmptyProject.sh</b> script</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+This is only a convenience script that allows to create the <b>directory structure</b> of a project.
+You can create this directory structure, fill it with your c++ source files and then finally invoke
+the <b>createProject.sh</b> script to create the <b>CMakeLists.txt</b>&#x2026;
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-sh">#**************************************************
+# A script to generate C++ project skeletons
+# Fri Jul 24 2015
+# V. Picaud,
+# https://github.com/vincent-picaud/CMakeScript
+#**************************************************
+
+if [ "$#" -ne 1 ]; then
+    echo -e "\\n\\nUsage is:\\n" $0 " project_name\\n"
+    exit -1
+fi
+
+echo -e "Create C++ empty project skeleton: $1"
+
+#**************************************************
+# Generate an "empty" skeleton C++ project
+# -&gt; populate it with your C++ files
+# -&gt; call createProject.sh to generate the CMakefiles, etc.
+#**************************************************
+
+project_name=$(basename "$1" | tr -st ' ' '_' )
+project_path=$(dirname "$1")
+
+mkdir -p ${project_path}/${project_name}/${project_name}
+mkdir -p ${project_path}/${project_name}/bin
+mkdir -p ${project_path}/${project_name}/examples
+mkdir -p ${project_path}/${project_name}/test
+mkdir -p ${project_path}/${project_name}/doc/doxygen/
+mkdir -p ${project_path}/${project_name}/doc/figures
+mkdir -p ${project_path}/${project_name}/cmake
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Vincent Picaud</p>
+<p class="date">Created: 2015-07-26 Sun 09:23</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
