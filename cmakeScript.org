@@ -1,4 +1,4 @@
-#+TITLE: A CMake script to generate skeleton C++ project
+#+TITLE: A shell script to generate CMake/C++ projects
 #+AUTHOR: Vincent Picaud
 #+EMAIL: picaud.vincent@gmail.com
 #+OPTIONS: ^:nil
