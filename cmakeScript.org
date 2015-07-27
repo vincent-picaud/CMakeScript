@@ -939,15 +939,25 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 #       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
 #       error. However the target projectUpstream is already available.
 
+# BOOST
+#--------------------------------------------------
+# If you project depends on BOOST, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization)
+#  
+# include_directories(${Boost_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # BLAS
 #--------------------------------------------------
 # If you project depends on BLAS, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#enable_language(Fortran)
-#find_package(BLAS REQUIRED)
-#include_directories(${BLAS_INCLUDE_DIRS})
-#target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
-#target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+# enable_language(Fortran)
+# find_package(BLAS REQUIRED)
+# include_directories(${BLAS_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Qt5
