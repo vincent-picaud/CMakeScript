@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>A shell script to generate CMake/C++ projects</title>
-<!-- 2015-07-27 Mon 16:19 -->
+<!-- 2015-07-27 Mon 18:08 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Vincent Picaud" />
@@ -1318,6 +1318,20 @@ The <b>OUR_PROJECT_NAMEDependencies.cmake</b> file contains your project depende
 #       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
 #       error. However the target projectUpstream is already available.
 
+# OpenMP
+#--------------------------------------------------
+# If you project depends on OpenMP, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(OpenMP REQUIRED)
+# if (OPENMP_FOUND)
+#   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+#   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+#   if(NOT MSVC)
+#     target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
+#   endif()
+# endif()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # BOOST
 #--------------------------------------------------
 # If you project depends on BOOST, uncomment me
@@ -2629,6 +2643,20 @@ more &gt; "${current_file}" &lt;&lt;'//GO.SYSIN DD PRIVATE_DD_TAG'
 #       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
 #       error. However the target projectUpstream is already available.
 
+# OpenMP
+#--------------------------------------------------
+# If you project depends on OpenMP, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(OpenMP REQUIRED)
+# if (OPENMP_FOUND)
+#   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+#   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+#   if(NOT MSVC)
+#     target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
+#   endif()
+# endif()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # BOOST
 #--------------------------------------------------
 # If you project depends on BOOST, uncomment me
@@ -2993,7 +3021,7 @@ mkdir -p ${project_path}/${project_name}/cmake
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Vincent Picaud</p>
-<p class="date">Created: 2015-07-27 Mon 16:19</p>
+<p class="date">Created: 2015-07-27 Mon 18:08</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
