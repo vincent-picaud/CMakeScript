@@ -539,6 +539,8 @@ mkdir -p ${current_file_dir}
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
+#pragma once
+
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME library
  */
@@ -879,15 +881,25 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
 #       error. However the target projectUpstream is already available.
 
+# BOOST
+#--------------------------------------------------
+# If you project depends on BOOST, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization)
+#  
+# include_directories(${Boost_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 # BLAS
 #--------------------------------------------------
 # If you project depends on BLAS, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#enable_language(Fortran)
-#find_package(BLAS REQUIRED)
-#include_directories(${BLAS_INCLUDE_DIRS})
-#target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
-#target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+# enable_language(Fortran)
+# find_package(BLAS REQUIRED)
+# include_directories(${BLAS_INCLUDE_DIRS})
+# target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+# target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Qt5
@@ -1155,6 +1167,8 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 // CAVEAT: config.hpp.in is never overwritten, but config.hpp is!
 //
 
+#pragma once
+
 /** @file 
  *  @brief OUR_PROJECT_NAME configuration file
  *  
@@ -1165,7 +1179,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #define OUR_PROJECT_NAME_VERSION_MINOR @OUR_PROJECT_NAME_VERSION_MINOR@
 #define OUR_PROJECT_NAME_VERSION_PATCH @OUR_PROJECT_NAME_VERSION_PATCH@
 
-const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
+constexpr const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
 
 #define OUR_PROJECT_NAME_SYSTEM_NAME @CMAKE_SYSTEM_NAME@
 #define OUR_PROJECT_NAME_HOST_SYSTEM_PROCESSOR @CMAKE_HOST_SYSTEM_PROCESSOR@
