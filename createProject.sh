@@ -84,47 +84,18 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
     set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
 
-
-#--------------------------------------------------
-# Header files
-#--------------------------------------------------
-#
-
-# Get git hash
-#
-include(ConfigGitRevision)
-
-# Configure header file
-#
-configure_file(
-    ${PROJECT_SOURCE_DIR}/cmake/config.hpp.in
-    ${PROJECT_BINARY_DIR}/OUR_PROJECT_NAME/config.hpp
-    @ONLY)
-
-# Location of header files
-#
-# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/OUR_PROJECT_NAME/CMakeLists.txt 
-#         target_include_directories(...)
-#
-include_directories(
-    # search file in source directories
-    ${PROJECT_SOURCE_DIR}/
-    # otherwise try in the binary directory 
-    # (to include the generated config.hpp for instance)
-    ${PROJECT_BINARY_DIR}/
-)
-
 #--------------------------------------------------
 # Explore sub-directories
 #--------------------------------------------------
 #
-# Our OUR_PROJECT_NAME testing framework (gtest)
-#
-add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
 
 # Our OUR_PROJECT_NAME library build
 #
 add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
+
+# Our OUR_PROJECT_NAME testing framework (gtest)
+#
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
 
 # Our OUR_PROJECT_NAME examples build
 #
@@ -216,6 +187,22 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # Automatically generated, but not overwritten
 #==================================================
 #
+#--------------------------------------------------
+# Configuration file config.hpp
+#--------------------------------------------------
+#
+
+# Get git hash
+#
+include(ConfigGitRevision)
+
+# Configure header file
+#
+configure_file(
+    ${PROJECT_SOURCE_DIR}/cmake/config.hpp.in
+    ${PROJECT_BINARY_DIR}/OUR_PROJECT_NAME/config.hpp
+    @ONLY)
+
 
 #--------------------------------------------------
 # Collect files and define target for the library
@@ -223,29 +210,40 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 
 # Collect files
 # 
-file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_CPP *.cpp)
-file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_HPP *.hpp)
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_CPP 
+     ${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME *.cpp)
+file(GLOB_RECURSE OUR_PROJECT_NAME_LIB_SOURCE_HPP 
+     ${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME *.hpp)
 
-add_library(OUR_PROJECT_NAME SHARED 
-            ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
-            ${OUR_PROJECT_NAME_LIB_SOURCE_HPP})
-
-# Target properties
+# Add library target with its dependencies
 #
-set_target_properties(OUR_PROJECT_NAME 
-                      PROPERTIES PUBLIC_HEADER "${OUR_PROJECT_NAME_LIB_SOURCE_HPP}")
+add_library(OUR_PROJECT_NAME SHARED ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} ${OUR_PROJECT_NAME_LIB_SOURCE_HPP} config.hpp)
 
+#--------------------------------------------------
+# Header files
+#--------------------------------------------------
+#
+
+# Location of header files
+#
+# CAVEAT: a priori must stay synchronized with target_include_directories(...)
+#
+include_directories(
+    # search file in source directories
+    ${PROJECT_SOURCE_DIR}/
+    # otherwise try in the binary directory 
+    # (to include the generated config.hpp for instance)
+    ${PROJECT_BINARY_DIR}/)
 
 # Here we define the include paths that will be used by our clients.
 # see: http://www.cmake.org/cmake/help/v3.0/command/target_include_directories.html
 # 
-# CAVEAT: a priori must stay synchronized with OUR_PROJECT_NAME/CMakeLists.txt include_directory(...)
+# CAVEAT: a priori must stay synchronized with include_directory(...)
 #
 target_include_directories(OUR_PROJECT_NAME PUBLIC
 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/>
 	$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/>
-	$<INSTALL_INTERFACE:include/>
-)
+	$<INSTALL_INTERFACE:include/>)
 
 # Library version
 # http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
@@ -266,19 +264,32 @@ include(${PROJECT_SOURCE_DIR}/cmake/OUR_PROJECT_NAMEDependencies.cmake)
 # Installation
 #--------------------------------------
 
+# Target properties
+# Commented because useless: does not respect directory hierarchy
+# set_target_properties(OUR_PROJECT_NAME 
+#                       PROPERTIES PUBLIC_HEADER "${OUR_PROJECT_NAME_LIB_SOURCE_HPP}")
+
 # Install library & header file
-install(TARGETS OUR_PROJECT_NAME EXPORT OUR_PROJECT_NAMETargets
-  LIBRARY DESTINATION lib/OUR_PROJECT_NAME
-  ARCHIVE DESTINATION lib/OUR_PROJECT_NAME
-  RUNTIME DESTINATION bin/OUR_PROJECT_NAME
-  PUBLIC_HEADER DESTINATION include/OUR_PROJECT_NAME
+install(TARGETS OUR_PROJECT_NAME 
+        # IMPORTANT: Add the OUR_PROJECT_NAME library to the "export-set"
+        EXPORT OUR_PROJECT_NAMETargets
+        LIBRARY DESTINATION lib/OUR_PROJECT_NAME COMPONENT shlib
+        ARCHIVE DESTINATION lib/OUR_PROJECT_NAME
+        RUNTIME DESTINATION bin/OUR_PROJECT_NAME COMPONENT bin
+        # Does not respect directory hierarchy !?!
+        # PUBLIC_HEADER DESTINATION include/OUR_PROJECT_NAME
 )
 
-# Do not forget config.hpp
+# -> Manual installation of hpp files
+#
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME
+        DESTINATION include
+        FILES_MATCHING PATTERN "*.hpp")
+
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/config.hpp"
-  DESTINATION
-    include/OUR_PROJECT_NAME
+        "${CMAKE_CURRENT_BINARY_DIR}/config.hpp"
+        DESTINATION
+        include/OUR_PROJECT_NAME
 )
 
 //GO.SYSIN DD PRIVATE_DD_TAG
@@ -305,12 +316,16 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #==================================================
 #
 
+#
+# Binary dir (bin/) does not preserve directory structure
+#==================================================
+
 # Collect files
 # --------------------------------------------------
 #
 file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
 
-# For each executables
+# For each file
 # --------------------------------------------------
 #
 foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
@@ -324,13 +339,8 @@ add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
 set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
 target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
 
-# Install (& Export) for external usage
-#
-install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} 
-        EXPORT OUR_PROJECT_NAMETargets
-        RUNTIME DESTINATION bin)
+install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} EXPORT OUR_PROJECT_NAMETargets RUNTIME DESTINATION bin)
 endforeach()
-
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -358,29 +368,38 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # OUR_PROJECT_NAME executables
 # Automatically generated, but not overwritten
 #==================================================
+
 #
+# Examples -> one need to preserve directory structure 
+#==================================================
 
 # Collect files
 # --------------------------------------------------
+# Use relative path to be able to copy binary file into examples/${ONE_SOURCE_RELATIVE_DIR}/
 #
-file(GLOB_RECURSE ALL_SOURCES_CPP *.cpp)
+file(GLOB_RECURSE ALL_SOURCES_CPP RELATIVE ${PROJECT_SOURCE_DIR}/examples *.cpp)
 
-# For each examples
+# For each executable
 # --------------------------------------------------
 #
 foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
 
-# Build it!
-#
-get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
-# Avoid name collision 
-# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
-add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
-set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
-target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+  # Build it!
+  #
+  get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+  # Avoid name collision 
+  # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
+  add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
+  set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+  target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
 
-# CAVEAT: no installation, examples are not exported from the build-tree
-#
+  # For the moment examples are NOT installed
+  # -> but if required this should look like:
+  #   (in order to preserve directory hierarchy)
+  #
+  # get_filename_component(ONE_SOURCE_RELATIVE_DIR ${ONE_SOURCE_CPP} DIRECTORY)
+  # install(FILE OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} DESTINATION examples/${ONE_SOURCE_RELATIVE_DIR})
+  
 endforeach()
 
 
@@ -500,7 +519,7 @@ fi
 # Create all C++ files
 #**************************************************
 
-current_file=${project_path}/${project_name}/test/toRemove_check_git_hash.cpp
+current_file=${project_path}/${project_name}/test/DirStruct/toRemove_check_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -513,7 +532,7 @@ echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
 #include "gtest/gtest.h"
-#include <OUR_PROJECT_NAME/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
 
 using namespace OUR_PROJECT_NAME;
 
@@ -527,7 +546,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/toRemove_git_hash.hpp
+current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.hpp
 #
 # Do not overwrite me!
 #
@@ -562,7 +581,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/toRemove_git_hash.cpp
+current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -574,7 +593,7 @@ mkdir -p ${current_file_dir}
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-#include <OUR_PROJECT_NAME/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
 #include <OUR_PROJECT_NAME/config.hpp>
 
 namespace OUR_PROJECT_NAME {
@@ -592,7 +611,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/bin/toRemove_${project_name}_git_hash.cpp
+current_file=${project_path}/${project_name}/bin/DirStruct/toRemove_${project_name}_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -607,7 +626,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME binary directory
  */
-#include <OUR_PROJECT_NAME/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
@@ -655,7 +674,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
  *    - use bibliographic reference @cite Heesch2008 
  * 
  */
-#include <OUR_PROJECT_NAME/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
