@@ -300,7 +300,7 @@ std::string git_hash();
  
 #+NAME: toRemove_git_hash.cpp
 #+BEGIN_SRC C
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <OUR_PROJECT_NAME/config.hpp>
 
 namespace OUR_PROJECT_NAME {
@@ -322,7 +322,7 @@ This file is required to show how executables are build and *installed* in the *
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME binary directory
  */
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
@@ -359,7 +359,7 @@ This file is required to show how examples are build. They are *not* installed a
  *    - use bibliographic reference @cite Heesch2008 
  * 
  */
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
@@ -890,7 +890,7 @@ Define a trivial test used to check that everything is okay:
 #+NAME: toRemove_check_git_hash.cpp
 #+BEGIN_SRC txt
 #include "gtest/gtest.h"
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 
 using namespace OUR_PROJECT_NAME;
 
@@ -994,9 +994,14 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 # target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Qt5
+# CAVEAT Qt5 PREAMBLE 
 #--------------------------------------------------
-# If you project depends on Qt, uncomment me
+# If you project depends on Qt, uncomment me and PUT ME BEFORE
+# add_library(OUR_PROJECT_NAME SHARED 
+#             ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
+#             ${OUR_PROJECT_NAME_LIB_SOURCE_HPP} config.hpp)
+# in the CMakeLists.txt
+# -> TODO: find out how to do that in a clean way
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set(CMAKE_AUTOMOC ON)
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -1008,6 +1013,11 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 # #
 # set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #
+
+# Qt5
+#--------------------------------------------------
+# If you project depends on Qt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # find_package(Qt5Widgets REQUIRED)
 # # Add dependency 
 # include_directories(${Qt5Widgets_INCLUDE_DIRS})
@@ -1179,8 +1189,7 @@ endif()
 #define OUR_PROJECT_NAME_VERSION_MAJOR @OUR_PROJECT_NAME_VERSION_MAJOR@  
 #define OUR_PROJECT_NAME_VERSION_MINOR @OUR_PROJECT_NAME_VERSION_MINOR@
 #define OUR_PROJECT_NAME_VERSION_PATCH @OUR_PROJECT_NAME_VERSION_PATCH@
-
-constexpr const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
+#define OUR_PROJECT_NAME_GIT_REVISION "@OUR_PROJECT_NAME_GIT_REVISION@"
 
 #define OUR_PROJECT_NAME_SYSTEM_NAME @CMAKE_SYSTEM_NAME@
 #define OUR_PROJECT_NAME_HOST_SYSTEM_PROCESSOR @CMAKE_HOST_SYSTEM_PROCESSOR@
@@ -1409,7 +1418,7 @@ fi
 # Create all C++ files
 #**************************************************
 
-current_file=${project_path}/${project_name}/test/DirStruct/toRemove_check_git_hash.cpp
+current_file=${project_path}/${project_name}/test/toRemove_extraLevel/toRemove_check_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -1429,7 +1438,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.hpp
+current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.hpp
 #
 # Do not overwrite me!
 #
@@ -1449,7 +1458,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.cpp
+current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -1469,7 +1478,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/bin/DirStruct/toRemove_${project_name}_git_hash.cpp
+current_file=${project_path}/${project_name}/bin/toRemove_extraLevel/toRemove_${project_name}_git_hash.cpp
 #
 # Do not overwrite me!
 #

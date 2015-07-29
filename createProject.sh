@@ -519,7 +519,7 @@ fi
 # Create all C++ files
 #**************************************************
 
-current_file=${project_path}/${project_name}/test/DirStruct/toRemove_check_git_hash.cpp
+current_file=${project_path}/${project_name}/test/toRemove_extraLevel/toRemove_check_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -532,7 +532,7 @@ echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
 #include "gtest/gtest.h"
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 
 using namespace OUR_PROJECT_NAME;
 
@@ -546,7 +546,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.hpp
+current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.hpp
 #
 # Do not overwrite me!
 #
@@ -581,7 +581,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/DirStruct/toRemove_git_hash.cpp
+current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -593,7 +593,7 @@ mkdir -p ${current_file_dir}
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <OUR_PROJECT_NAME/config.hpp>
 
 namespace OUR_PROJECT_NAME {
@@ -611,7 +611,7 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/bin/DirStruct/toRemove_${project_name}_git_hash.cpp
+current_file=${project_path}/${project_name}/bin/toRemove_extraLevel/toRemove_${project_name}_git_hash.cpp
 #
 # Do not overwrite me!
 #
@@ -626,7 +626,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME binary directory
  */
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
@@ -674,7 +674,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
  *    - use bibliographic reference @cite Heesch2008 
  * 
  */
-#include <OUR_PROJECT_NAME/DirStruct/toRemove_git_hash.hpp>
+#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <iostream>
 
 using namespace OUR_PROJECT_NAME;
@@ -935,9 +935,14 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Qt5
+# CAVEAT Qt5 PREAMBLE 
 #--------------------------------------------------
-# If you project depends on Qt, uncomment me
+# If you project depends on Qt, uncomment me and PUT ME BEFORE
+# add_library(OUR_PROJECT_NAME SHARED 
+#             ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
+#             ${OUR_PROJECT_NAME_LIB_SOURCE_HPP} config.hpp)
+# in the CMakeLists.txt
+# -> TODO: find out how to do that in a clean way
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # set(CMAKE_AUTOMOC ON)
 # set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -949,6 +954,11 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # #
 # set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #
+
+# Qt5
+#--------------------------------------------------
+# If you project depends on Qt, uncomment me
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # find_package(Qt5Widgets REQUIRED)
 # # Add dependency 
 # include_directories(${Qt5Widgets_INCLUDE_DIRS})
@@ -1211,8 +1221,7 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #define OUR_PROJECT_NAME_VERSION_MAJOR @OUR_PROJECT_NAME_VERSION_MAJOR@  
 #define OUR_PROJECT_NAME_VERSION_MINOR @OUR_PROJECT_NAME_VERSION_MINOR@
 #define OUR_PROJECT_NAME_VERSION_PATCH @OUR_PROJECT_NAME_VERSION_PATCH@
-
-constexpr const char *OUR_PROJECT_NAME_GIT_REVISION = "@OUR_PROJECT_NAME_GIT_REVISION@";
+#define OUR_PROJECT_NAME_GIT_REVISION "@OUR_PROJECT_NAME_GIT_REVISION@"
 
 #define OUR_PROJECT_NAME_SYSTEM_NAME @CMAKE_SYSTEM_NAME@
 #define OUR_PROJECT_NAME_HOST_SYSTEM_PROCESSOR @CMAKE_HOST_SYSTEM_PROCESSOR@
