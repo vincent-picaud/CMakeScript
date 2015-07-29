@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>A shell script to generate CMake/C++ projects</title>
-<!-- 2015-07-28 Tue 15:42 -->
+<!-- 2015-07-29 Wed 07:06 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Vincent Picaud" />
@@ -243,9 +243,9 @@ My main sources of information were:
 <h3 id="sec-1-2"><span class="section-number-3">1.2</span> Emacs, org-mode&#x2026;</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
-All theses <b>shell scripts</b> are <b>automatically</b> generated using <a href="http://orgmode.org/">emacs + org-mode</a> from an unique <b>cmake.org</b> source file. For the hasty users or for those who do not have
+All theses <b>shell scripts</b> are <b>automatically</b> generated using <a href="http://orgmode.org/">emacs + org-mode</a> from an unique <b>cmakeScript.org</b> source file. For the hasty users or for those who do not have
 <b>emacs</b> and <b>org-mode</b> properly installed I also provide the generated scripts for a direct usage. However any modification must be done by editing
- the  <b>cmake.org</b> source file first and then by re-generating the scripts with the  <a href="http://orgmode.org/manual/Extracting-source-code.html">C-c C-v t</a> command.
+ the  <b>cmakeScript.org</b> source file first and then by re-generating the scripts with the  <a href="http://orgmode.org/manual/Extracting-source-code.html">C-c C-v t</a> command.
 </p>
 </div>
 </div>
@@ -557,11 +557,13 @@ make test
 <h3 id="sec-1-4"><span class="section-number-3">1.4</span> <span class="todo TODO">TODO</span> </h3>
 <div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
-<li>Include more examples
+<li>Include more examples Qt&#x2026;
+</li>
+<li>Create tutorial/CMakeLists.txt with automatic test of the scripts
 </li>
 <li>Test for other configurations: cmake version, host machine&#x2026;
 </li>
-<li>Configure for SIMD, OpenMP&#x2026; however the result is maybe too oriented toward numerical applications
+<li>Configure for SIMD (too oriented toward numerical applications?)
 </li>
 </ul>
 </div>
@@ -3060,7 +3062,7 @@ mkdir -p ${project_path}/${project_name}/cmake
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Vincent Picaud</p>
-<p class="date">Created: 2015-07-28 Tue 15:42</p>
+<p class="date">Created: 2015-07-29 Wed 07:06</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

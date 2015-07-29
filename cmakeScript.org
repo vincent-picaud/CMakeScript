@@ -29,9 +29,9 @@ My main sources of information were:
 
 ** Emacs, org-mode...
 
-All theses *shell scripts* are *automatically* generated using [[http://orgmode.org/][emacs + org-mode]] from an unique *cmake.org* source file. For the hasty users or for those who do not have
+All theses *shell scripts* are *automatically* generated using [[http://orgmode.org/][emacs + org-mode]] from an unique *cmakeScript.org* source file. For the hasty users or for those who do not have
 *emacs* and *org-mode* properly installed I also provide the generated scripts for a direct usage. However any modification must be done by editing
- the  *cmake.org* source file first and then by re-generating the scripts with the  [[http://orgmode.org/manual/Extracting-source-code.html][C-c C-v t]] command.
+ the  *cmakeScript.org* source file first and then by re-generating the scripts with the  [[http://orgmode.org/manual/Extracting-source-code.html][C-c C-v t]] command.
 
 ** Getting started
 *** A simple *myProject*
@@ -263,9 +263,10 @@ make test
 
 ** TODO
 
-- Include more examples
+- Include more examples Qt...
+- Create tutorial/CMakeLists.txt with automatic test of the scripts
 - Test for other configurations: cmake version, host machine...
-- Configure for SIMD, OpenMP... however the result is maybe too oriented toward numerical applications
+- Configure for SIMD (too oriented toward numerical applications?)
   
 * Recipes for the *createProject.sh* script
 
