@@ -77,7 +77,7 @@ include(ConfigTesting)
 
 # Example how to set c++ compiler flags for GNU
 #
-if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+if((CMAKE_CXX_COMPILER_ID MATCHES GNU) OR (CMAKE_CXX_COMPILER_ID MATCHES Clang))
     set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
     set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
@@ -95,7 +95,10 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
-add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+if( NOT (CMAKE_SYSTEM_NAME MATCHES Windows))
+  # gtest not yet supported by mxe
+  add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+endif()
 
 # Our OUR_PROJECT_NAME examples build
 #
