@@ -13,23 +13,23 @@ fi
 
 echo -e "Create C++ project skeleton: $1"
 
-project_name=$(basename "$1" | tr -st ' ' '_' )
-project_path=$(dirname "$1")
+project_name="$(basename "$1" | tr -st ' ' '_' )"
+project_path="$(dirname "$1")"
 
 #**************************************************
 # Create all CMakeLists.txt files
 #**************************************************
 #
 
-current_file=${project_path}/${project_name}/CMakeLists.txt
+current_file="${project_path}/${project_name}/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -170,15 +170,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/CMakeLists.txt
+current_file="${project_path}/${project_name}/${project_name}/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -298,15 +298,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/bin/CMakeLists.txt
+current_file="${project_path}/${project_name}/bin/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -352,15 +352,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/examples/CMakeLists.txt
+current_file="${project_path}/${project_name}/examples/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -409,15 +409,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/doc/doxygen/CMakeLists.txt
+current_file="${project_path}/${project_name}/doc/doxygen/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -465,15 +465,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/test/CMakeLists.txt
+current_file="${project_path}/${project_name}/test/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -519,15 +519,15 @@ fi
 # Create all C++ files
 #**************************************************
 
-current_file=${project_path}/${project_name}/test/toRemove_extraLevel/toRemove_check_git_hash.cpp
+current_file="${project_path}/${project_name}/test/toRemove_extraLevel/toRemove_check_git_hash.cpp"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -546,15 +546,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.hpp
+current_file="${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.hpp"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -581,15 +581,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.cpp
+current_file="${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.cpp"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -611,15 +611,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/bin/toRemove_extraLevel/toRemove_${project_name}_git_hash.cpp
+current_file="${project_path}/${project_name}/bin/toRemove_extraLevel/toRemove_${project_name}_git_hash.cpp"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -651,15 +651,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/examples/toRemove_example.cpp
+current_file="${project_path}/${project_name}/examples/toRemove_example.cpp"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -701,15 +701,15 @@ fi
 # Create Doc stuff
 #**************************************************
 #
-current_file=${project_path}/${project_name}/doc/doxygen/doxyfile.in
+current_file="${project_path}/${project_name}/doc/doxygen/doxyfile.in"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -720,7 +720,7 @@ HIDE_UNDOC_MEMBERS     = YES
 HIDE_UNDOC_CLASSES     = YES
 HIDE_FRIEND_COMPOUNDS  = YES
 
-REPEAT_BRIEF           = NO
+REPEAT_BRIEF           = YES
 ALWAYS_DETAILED_SEC    = NO
 
 CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/OUR_PROJECT_NAME_bibliography.bib
@@ -749,14 +749,14 @@ EXTRA_PACKAGES         = mathtools \
 PREDEFINED             = DOXYGEN_DOC
 SKIP_FUNCTION_MACROS   = NO
 
-COLLABORATION_GRAPH    = NO
-INCLUDE_GRAPH          = NO
-INCLUDED_BY_GRAPH      = NO
-GRAPHICAL_HIERARCHY    = NO
-DIRECTORY_GRAPH        = NO
+COLLABORATION_GRAPH    = YES
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+GRAPHICAL_HIERARCHY    = YES
+DIRECTORY_GRAPH        = YES
 
 //GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+#sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
 #
 # CAVEAT: Doxygen update doxyfile.in
 #
@@ -765,15 +765,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/doc/${project_name}_bibliography.bib
+current_file="${project_path}/${project_name}/doc/${project_name}_bibliography.bib"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -797,15 +797,15 @@ fi
 # OUR_PROJECT_NAME/doc/figures subdirectory
 #==================================================
 #
-current_file=${project_path}/${project_name}/doc/figures/readme.txt
+current_file="${project_path}/${project_name}/doc/figures/readme.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -831,15 +831,15 @@ fi
 # Create the OUR_PROJECT_NAME/cmake/ files.
 #**************************************************
 #
-current_file=${project_path}/${project_name}/cmake/${project_name}Config.cmake.in
+current_file="${project_path}/${project_name}/cmake/${project_name}Config.cmake.in"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -857,15 +857,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/${project_name}Dependencies.cmake
+current_file="${project_path}/${project_name}/cmake/${project_name}Dependencies.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1000,14 +1000,14 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/CTestConfig.cmake
+current_file="${project_path}/${project_name}/CTestConfig.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
-mkdir -p ${current_file_dir}
+current_file_dir="$(dirname "${current_file}")"
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1029,15 +1029,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/ConfigTesting.cmake
+current_file="${project_path}/${project_name}/cmake/ConfigTesting.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1063,15 +1063,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/ConfigSafeGuards.cmake
+current_file="${project_path}/${project_name}/cmake/ConfigSafeGuards.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1111,15 +1111,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/FindGit.cmake
+current_file="${project_path}/${project_name}/cmake/FindGit.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1149,15 +1149,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/ConfigGitRevision.cmake
+current_file="${project_path}/${project_name}/cmake/ConfigGitRevision.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -1192,15 +1192,15 @@ fi
 
 #**************************************************
 
-current_file=${project_path}/${project_name}/cmake/config.hpp.in
+current_file="${project_path}/${project_name}/cmake/config.hpp.in"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 

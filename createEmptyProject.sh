@@ -19,8 +19,8 @@ echo -e "Create C++ empty project skeleton: $1"
 # -> call createProject.sh to generate the CMakefiles, etc.
 #**************************************************
 
-project_name=$(basename "$1" | tr -st ' ' '_' )
-project_path=$(dirname "$1")
+project_name="$(basename "$1" | tr -st ' ' '_' )"
+project_path="$(dirname "$1")"
 
 mkdir -p ${project_path}/${project_name}/${project_name}
 mkdir -p ${project_path}/${project_name}/bin

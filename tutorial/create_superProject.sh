@@ -6,15 +6,15 @@
 project_path=./
 project_name=superProject
 
-current_file=${project_path}/${project_name}/CMakeLists.txt
+current_file="${project_path}/${project_name}/CMakeLists.txt"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
@@ -45,13 +45,13 @@ fi
 
 #==================================================
 
-current_file=${project_path}/${project_name}/project_C/cmake/project_CDependencies.cmake
+current_file="${project_path}/${project_name}/project_C/cmake/project_CDependencies.cmake"
 #
 # CAVEAT: here, for the example, we must overwrite!
 #
-current_file_dir=$(dirname "${current_file}")
+current_file_dir="$(dirname "${current_file}")"
 
-mkdir -p ${current_file_dir}
+mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
