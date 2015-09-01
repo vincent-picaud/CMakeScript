@@ -47,11 +47,6 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #==================================================
 #
 cmake_minimum_required(VERSION 3.0)
-project(OUR_PROJECT_NAME)
- 
-# enable fortran, c, and c++ language
-#
-enable_language(Fortran C CXX)
 
 # OUR_PROJECT_NAME version
 #
@@ -59,6 +54,11 @@ set(OUR_PROJECT_NAME_VERSION_MAJOR 0)
 set(OUR_PROJECT_NAME_VERSION_MINOR 1)
 set(OUR_PROJECT_NAME_VERSION_PATCH 0)
 set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
+
+# Define project name & version & languages
+#
+project(OUR_PROJECT_NAME VERSION ${OUR_PROJECT_NAME_VERSION})
+enable_language(Fortran C CXX)
 
 # Location of additional cmake modules
 #
@@ -713,21 +713,29 @@ mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-PROJECT_NAME           = OUR_PROJECT_NAME
-PROJECT_NUMBER         = @OUR_PROJECT_NAME_VERSION@
+PROJECT_NAME           = @PROJECT_NAME@
+PROJECT_NUMBER         = @PROJECT_VERSION@
 
 HIDE_UNDOC_MEMBERS     = YES
 HIDE_UNDOC_CLASSES     = YES
 HIDE_FRIEND_COMPOUNDS  = YES
 
+HIDE_SCOPE_NAMES       = YES
+EXTRACT_STATIC         = YES
+
 REPEAT_BRIEF           = YES
 ALWAYS_DETAILED_SEC    = NO
 
-CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/OUR_PROJECT_NAME_bibliography.bib
+INLINE_SOURCES         = NO
+
+CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/@PROJECT_NAME@_bibliography.bib
 
 WARN_LOGFILE           = doxygenError.txt
 
-INPUT                  = @PROJECT_SOURCE_DIR@/OUR_PROJECT_NAME \
+CLANG_ASSISTED_PARSING = YES
+CLANG_OPTIONS          = @CMAKE_CXX_FLAGS@
+
+INPUT                  = @PROJECT_SOURCE_DIR@/ \
                          @PROJECT_SOURCE_DIR@/examples \
                          @PROJECT_SOURCE_DIR@/bin \
                          @PROJECT_SOURCE_DIR@/test
@@ -736,7 +744,8 @@ FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
 
 EXCLUDE_PATTERNS       =  */moc_/* */_automoc/*
-EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples 
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples \
+                         @PROJECT_SOURCE_DIR@/test
 EXAMPLE_PATTERNS       = *.cpp
 EXAMPLE_RECURSIVE      = YES
 
