@@ -1,7 +1,5 @@
 #**************************************************
 # A script to generate C++ project skeletons
-# Fri Jul 24 2015
-# V. Picaud,
 # https://github.com/vincent-picaud/CMakeScript
 #**************************************************
 
@@ -34,8 +32,6 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 
 #**************************************************
 # A script to generate C++ project skeletons
-# Fri Jul 24 2015
-# V. Picaud,
 # https://github.com/vincent-picaud/CMakeScript
 #**************************************************
 
@@ -56,7 +52,7 @@ set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAM
 
 # Define project name & version & languages
 #
-project(OUR_PROJECT_NAME VERSION ${OUR_PROJECT_NAME_VERSION})
+project(OUR_PROJECT_NAME VERSION ${OUR_PROJECT_NAME_VERSION} LANGUAGES CXX)
 enable_language(Fortran C CXX)
 
 # Location of additional cmake modules
@@ -70,17 +66,13 @@ set(CMAKE_MODULE_PATH
 #
 include(ConfigSafeGuards)
 
-# CTest and CDash stuff
-#
-include(ConfigTesting)
-
 # Example how to set c++ compiler flags for GNU
 #
 if((CMAKE_CXX_COMPILER_ID MATCHES GNU) OR (CMAKE_CXX_COMPILER_ID MATCHES Clang))
     set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
     set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+#    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
 
 #--------------------------------------------------
@@ -94,10 +86,10 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
-if( NOT (CMAKE_SYSTEM_NAME MATCHES Windows))
-  # gtest not yet supported by mxe
-  add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
-endif()
+#if( NOT (CMAKE_SYSTEM_NAME MATCHES Windows))
+# gtest not yet supported by mxe
+add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+#endif()
 
 # Our OUR_PROJECT_NAME examples build
 #
@@ -254,6 +246,8 @@ set_property(TARGET OUR_PROJECT_NAME PROPERTY VERSION ${OUR_PROJECT_NAME_VERSION
 set_property(TARGET OUR_PROJECT_NAME PROPERTY SOVERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
 set_property(TARGET OUR_PROJECT_NAME PROPERTY INTERFACE_OUR_PROJECT_NAME_MAJOR_VERSION ${OUR_PROJECT_NAME_MAJOR_VERSION})
 set_property(TARGET OUR_PROJECT_NAME APPEND PROPERTY COMPATIBLE_INTERFACE_STRING "${OUR_PROJECT_NAME_MAJOR_VERSION}")
+
+set_target_properties(OUR_PROJECT_NAME PROPERTIES LINKER_LANGUAGE CXX)
 
 #--------------------------------------------------
 # Include dependencies
@@ -459,7 +453,6 @@ else()
    	             COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile
    		     SOURCES ${PROJECT_BINARY_DIR}/doc/doxygen/doxyfile)
 endif()
-
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -718,26 +711,11 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @PROJECT_VERSION@
 
-HIDE_UNDOC_MEMBERS     = YES
-HIDE_UNDOC_CLASSES     = YES
-HIDE_FRIEND_COMPOUNDS  = YES
-
-HIDE_SCOPE_NAMES       = YES
-EXTRACT_STATIC         = YES
-
-REPEAT_BRIEF           = YES
-ALWAYS_DETAILED_SEC    = NO
-
-INLINE_SOURCES         = NO
-
 CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/@PROJECT_NAME@_bibliography.bib
 
 WARN_LOGFILE           = doxygenError.txt
 
-CLANG_ASSISTED_PARSING = YES
-CLANG_OPTIONS          = @CMAKE_CXX_FLAGS@
-
-INPUT                  = @PROJECT_SOURCE_DIR@/ \
+INPUT                  = @PROJECT_SOURCE_DIR@/@PROJECT_NAME@ \
                          @PROJECT_SOURCE_DIR@/examples \
                          @PROJECT_SOURCE_DIR@/bin \
                          @PROJECT_SOURCE_DIR@/test
@@ -746,8 +724,7 @@ FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
 
 EXCLUDE_PATTERNS       =  */moc_/* */_automoc/*
-EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples \
-                         @PROJECT_SOURCE_DIR@/test
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@
 EXAMPLE_PATTERNS       = *.cpp
 EXAMPLE_RECURSIVE      = YES
 
@@ -758,13 +735,6 @@ EXTRA_PACKAGES         = mathtools \
                          stmaryrd
 			 
 PREDEFINED             = DOXYGEN_DOC
-SKIP_FUNCTION_MACROS   = NO
-
-COLLABORATION_GRAPH    = YES
-INCLUDE_GRAPH          = YES
-INCLUDED_BY_GRAPH      = YES
-GRAPHICAL_HIERARCHY    = YES
-DIRECTORY_GRAPH        = YES
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 #sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -1011,28 +981,48 @@ fi
 
 #**************************************************
 
-current_file="${project_path}/${project_name}/CTestConfig.cmake"
+current_file="${project_path}/${project_name}/cmake/ConfigGTest.cmake"
 #
 # Do not overwrite me!
 #
 if [ ! -f "${current_file}" ]
 then
 current_file_dir="$(dirname "${current_file}")"
+
 mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-#==================================================
-# Automatically generated, but not overwritten
-#==================================================
+# from https://github.com/Crascit/DownloadProject/blob/master/CMakeLists.txt
+# CAVEAT: use DownloadProject.cmake
+#
+if (CMAKE_VERSION VERSION_LESS 3.2)
+    set(UPDATE_DISCONNECTED_IF_AVAILABLE "")
+else()
+    set(UPDATE_DISCONNECTED_IF_AVAILABLE "UPDATE_DISCONNECTED 1")
+endif()
 
-set(CTEST_PROJECT_NAME       "OUR_PROJECT_NAME")
-set(CTEST_NIGHTLY_START_TIME "00:00:00 CEST")
-set(CTEST_DROP_METHOD        "http")
-set(CTEST_DROP_SITE          "my.cdash.org")
-set(CTEST_DROP_LOCATION      "/submit.php?project=OUR_PROJECT_NAME")
-set(CTEST_DROP_SITE_CDASH    TRUE)
-set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 200)
+include(DownloadProject)
+download_project(PROJ                googletest
+                 GIT_REPOSITORY      https://github.com/google/googletest.git
+                 GIT_TAG             master
+                 ${UPDATE_DISCONNECTED_IF_AVAILABLE}
+)
+
+# Prevent GoogleTest from overriding our compiler/linker options
+# when building with Visual Studio
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+
+# When using CMake 2.8.11 or later, header path dependencies
+# are automatically added to the gtest and gmock targets.
+# For earlier CMake versions, we have to explicitly add the
+# required directories to the header search path ourselves.
+if (CMAKE_VERSION VERSION_LESS 2.8.11)
+    include_directories("${gtest_SOURCE_DIR}/include"
+                        "${gmock_SOURCE_DIR}/include")
+endif()
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -1040,7 +1030,7 @@ fi
 
 #**************************************************
 
-current_file="${project_path}/${project_name}/cmake/ConfigTesting.cmake"
+current_file="${project_path}/${project_name}/cmake/DownloadProject.cmake"
 #
 # Do not overwrite me!
 #
@@ -1052,21 +1042,184 @@ mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-#==================================================
-# Automatically generated, but not overwritten
+# From https://github.com/Crascit/DownloadProject
+
+# MODULE:   DownloadProject
 #
-# Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
-#==================================================
-# set cdash buildname
-set(BUILDNAME
-    "${CMAKE_SYSTEM_NAME}-${CMAKE_HOST_SYSTEM_PROCESSOR}-${CMAKE_Fortran_COMPILER_ID}-${cmake_build_type_tolower}"
-    CACHE STRING
-    "Name of build on the dashboard"
+# PROVIDES:
+#   download_project( PROJ projectName
+#                    [PREFIX prefixDir]
+#                    [DOWNLOAD_DIR downloadDir]
+#                    [SOURCE_DIR srcDir]
+#                    [BINARY_DIR binDir]
+#                    [QUIET]
+#                    ...
+#   )
+#
+#       Provides the ability to download and unpack a tarball, zip file, git repository,
+#       etc. at configure time (i.e. when the cmake command is run). How the downloaded
+#       and unpacked contents are used is up to the caller, but the motivating case is
+#       to download source code which can then be included directly in the build with
+#       add_subdirectory() after the call to download_project(). Source and build
+#       directories are set up with this in mind.
+#
+#       The PROJ argument is required. The projectName value will be used to construct
+#       the following variables upon exit (obviously replace projectName with its actual
+#       value):
+#
+#           projectName_SOURCE_DIR
+#           projectName_BINARY_DIR
+#
+#       The SOURCE_DIR and BINARY_DIR arguments are optional and would not typically
+#       need to be provided. They can be specified if you want the downloaded source
+#       and build directories to be located in a specific place. The contents of
+#       projectName_SOURCE_DIR and projectName_BINARY_DIR will be populated with the
+#       locations used whether you provide SOURCE_DIR/BINARY_DIR or not.
+#
+#       The DOWNLOAD_DIR argument does not normally need to be set. It controls the
+#       location of the temporary CMake build used to perform the download.
+#
+#       The PREFIX argument can be provided to change the base location of the default
+#       values of DOWNLOAD_DIR, SOURCE_DIR and BINARY_DIR. If all of those three arguments
+#       are provided, then PREFIX will have no effect. The default value for PREFIX is
+#       CMAKE_BINARY_DIR.
+#
+#       The QUIET option can be given if you do not want to show the output associated
+#       with downloading the specified project.
+#
+#       In addition to the above, any other options are passed through unmodified to
+#       ExternalProject_Add() to perform the actual download, patch and update steps.
+#       The following ExternalProject_Add() options are explicitly prohibited (they
+#       are reserved for use by the download_project() command):
+#
+#           CONFIGURE_COMMAND
+#           BUILD_COMMAND
+#           INSTALL_COMMAND
+#           TEST_COMMAND
+#
+#       Only those ExternalProject_Add() arguments which relate to downloading, patching
+#       and updating of the project sources are intended to be used. Also note that at
+#       least one set of download-related arguments are required.
+#
+#       If using CMake 3.2 or later, the UPDATE_DISCONNECTED option can be used to
+#       prevent a check at the remote end for changes every time CMake is run
+#       after the first successful download. See the documentation of the ExternalProject
+#       module for more information. It is likely you will want to use this option if it
+#       is available to you.
+#
+# EXAMPLE USAGE:
+#
+#   include(download_project.cmake)
+#   download_project(PROJ                googletest
+#                    GIT_REPOSITORY      https://github.com/google/googletest.git
+#                    GIT_TAG             master
+#                    UPDATE_DISCONNECTED 1
+#                    QUIET
+#   )
+#
+#   add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+#
+#========================================================================================
+
+
+set(_DownloadProjectDir "${CMAKE_CURRENT_LIST_DIR}")
+
+include(CMakeParseArguments)
+
+function(download_project)
+
+    set(options QUIET)
+    set(oneValueArgs
+        PROJ
+        PREFIX
+        DOWNLOAD_DIR
+        SOURCE_DIR
+        BINARY_DIR
+        # Prevent the following from being passed through
+        CONFIGURE_COMMAND
+        BUILD_COMMAND
+        INSTALL_COMMAND
+        TEST_COMMAND
+    )
+    set(multiValueArgs "")
+
+    cmake_parse_arguments(DL_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    # Hide output if requested
+    if (DL_ARGS_QUIET)
+        set(OUTPUT_QUIET "OUTPUT_QUIET")
+    else()
+        unset(OUTPUT_QUIET)
+        message(STATUS "Downloading/updating ${DL_ARGS_PROJ}")
+    endif()
+
+    # Set up where we will put our temporary CMakeLists.txt file and also
+    # the base point below which the default source and binary dirs will be
+    if (NOT DL_ARGS_PREFIX)
+        set(DL_ARGS_PREFIX "${CMAKE_BINARY_DIR}")
+    endif()
+    if (NOT DL_ARGS_DOWNLOAD_DIR)
+        set(DL_ARGS_DOWNLOAD_DIR "${DL_ARGS_PREFIX}/${DL_ARGS_PROJ}-download")
+    endif()
+
+    # Ensure the caller can know where to find the source and build directories
+    if (NOT DL_ARGS_SOURCE_DIR)
+        set(DL_ARGS_SOURCE_DIR "${DL_ARGS_PREFIX}/${DL_ARGS_PROJ}-src")
+    endif()
+    if (NOT DL_ARGS_BINARY_DIR)
+        set(DL_ARGS_BINARY_DIR "${DL_ARGS_PREFIX}/${DL_ARGS_PROJ}-build")
+    endif()
+    set(${DL_ARGS_PROJ}_SOURCE_DIR "${DL_ARGS_SOURCE_DIR}" PARENT_SCOPE)
+    set(${DL_ARGS_PROJ}_BINARY_DIR "${DL_ARGS_BINARY_DIR}" PARENT_SCOPE)
+
+    # Create and build a separate CMake project to carry out the download.
+    # If we've already previously done these steps, they will not cause
+    # anything to be updated, so extra rebuilds of the project won't occur.
+    configure_file("${_DownloadProjectDir}/DownloadProject.CMakeLists.cmake.in"
+                   "${DL_ARGS_DOWNLOAD_DIR}/CMakeLists.txt")
+    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+                    ${OUTPUT_QUIET}
+                    WORKING_DIRECTORY "${DL_ARGS_DOWNLOAD_DIR}"
+    )
+    execute_process(COMMAND ${CMAKE_COMMAND} --build .
+                    ${OUTPUT_QUIET}
+                    WORKING_DIRECTORY "${DL_ARGS_DOWNLOAD_DIR}"
     )
 
-# The following are required to uses Dart and the CDash dashboard
-include(CTest)
-enable_testing()
+endfunction()
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file="${project_path}/${project_name}/cmake/DownloadProject.CMakeLists.cmake.in"
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir="$(dirname "${current_file}")"
+
+mkdir -p "${current_file_dir}"
+echo "${current_file}" 1>&2
+more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+cmake_minimum_required(VERSION 2.8.2)
+
+project(${DL_ARGS_PROJ}-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(${DL_ARGS_PROJ}-download
+                    ${DL_ARGS_UNPARSED_ARGUMENTS}
+                    SOURCE_DIR          "${DL_ARGS_SOURCE_DIR}"
+                    BINARY_DIR          "${DL_ARGS_BINARY_DIR}"
+                    CONFIGURE_COMMAND   ""
+                    BUILD_COMMAND       ""
+                    INSTALL_COMMAND     ""
+                    TEST_COMMAND        ""
+)
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
