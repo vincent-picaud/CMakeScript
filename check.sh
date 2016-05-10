@@ -1,3 +1,5 @@
+rm -rf myProject
+./createProject.sh myProject
 
 # Create build dir
 #
@@ -25,4 +27,4 @@ make test
 
 # ctest (+ cdash board)
 # 
-ctest -D Experimental
+#ctest -D Experimental

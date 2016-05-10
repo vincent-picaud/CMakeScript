@@ -1,2 +1,0 @@
-
-../createProject.sh myProject

@@ -5,281 +5,90 @@
 
 # To generate the createProject.sh script: C-c C-v t
 # To html-export documentation: C-c C-e h h
+#
+# Some links:
+# http://emacs.stackexchange.com/questions/10424/how-can-i-hide-a-code-block-in-the-latex-output
+# -> explains how to _not_ export code snippet 
 
 * Introduction
 
-** Motivations
-
 *CMake* is a great tool, however despite all its advantages it is sometimes boring to create a new build solution for each new C++ project.
 The aim of these *shell scripts* is to provide a working (at least I hope so) project skeleton in one command line:
-#+BEGIN_SRC
-sh createProject.sh myProject
+#+BEGIN_SRC txt
+createProject.sh myProject
 #+END_SRC
 
 I developed these *shell scripts* for my personal usages under *Linux*. By consequence they are currently not tested for *Windows* or other *OS*. 
 Feel free to modify them, feed backs or pull requests are welcome.
-
-To create these *shell scripts* I picked up some code snippets from various sources. When this happened I put the corresponding *link* 
-to the original source.
-
-My main sources of information were:
-- [[http://www.cmake.org/documentation/][official cmake site]]
-- [[https://github.com/bast/cmake-example][bast/cmake-example]] and his homepage with [[http://bast.fr/talks/][a lot of interesting talks concerning cmake, git...]]
-- various *stackoverflow* questions and/or *github* projects: [[http://stackoverflow.com/questions/20746936/cmake-of-what-use-is-find-package-if-you-need-to-specify-cmake-module-path-an][here]], [[https://github.com/forexample/package-example][here]] or [[https://github.com/scumm/foobar][here]].
-
-** Emacs, org-mode...
 
 All theses *shell scripts* are *automatically* generated using [[http://orgmode.org/][emacs + org-mode]] from an unique *cmakeScript.org* source file. For the hasty users or for those who do not have
 *emacs* and *org-mode* properly installed I also provide the generated scripts for a direct usage. However any modification must be done by editing
  the  *cmakeScript.org* source file first and then by re-generating the scripts with the  [[http://orgmode.org/manual/Extracting-source-code.html][C-c C-v t]] command.
 
 ** Getting started
-*** A simple *myProject*
 
-To create your first project, go into the *tutorial/* directory and run
-
-#+NAME: Create_MyProject
-#+BEGIN_SRC sh
+#+BEGIN_SRC txt
 ../createProject.sh myProject
 #+END_SRC
 
 This will create the following *project skeleton*. By default the script *never* overwrite created files. Thats means that you can safely update your build system by reusing the *createProject.sh* script. Some files are protected against *writing*, this is only a hint to notify that for a basic usage your generaly do not have to modify them. However, if you need more tuning you can safely modify them, your modifications will *not* be erased by the script.
 
 #+BEGIN_SRC txt
-Project Skeleton                Read only right   Comments    
-                                         |
-myProject/                               |
-├── cmake........................................ Contains the cmake stuff
-│   ├── ConfigGitRevision.cmake..........R....... Retrieves git hash
-│   ├── config.hpp.in....................R....... Project configuration macros, configured by cmake script
-│   ├── ConfigSafeGuards.cmake...........R....... Block in-source-build
-│   ├── ConfigTesting.cmake..............R....... Creates BUILDNAME and enable CTest
-│   ├── FindGit.cmake....................R....... Find git
-│   ├── myProjectConfig.cmake.in................. Contains your default project configuration, no modification needed for a basic usage
-│   └── myProjectDependencies.cmake.............. Contains your project dependencies, you can edit it (not erased by the script)
-├── doc
-│   ├── doxygen.................................. Doxygen stuff, 
-│   │   ├── CMakeLists.txt...............R....... Creates documentation targets
-│   │   ├── doxyfile.in.......................... Your doxygen configuration file, modify me!
-│   ├── figures
-│   │   └── readme.txt
-│   └── myProject_bibliography.bib............... A bibTeX bib file, can be used with Doxygen, modify me!
-├── myProject
-│   ├── CMakeLists.txt...................R.......
-│   ├── toRemove_git_hash.cpp.................... Just there to have something to compile for myProject library, remove me! Installed in include/ 
-│   └── toRemove_git_hash.hpp.................... Just there to have something to compile for myProject library, remove me! Installed in include/myProject 
-├── test
-│   ├── CMakeLists.txt...................R.......
-│   └── toRemove_check_git_hash.cpp.............. CTest/CDash & gtest unit test example, remove me and add more! :-)
-├── bin.......................................... A directory that contains binary files, they are installed in bin/                           
-│   ├── CMakeLists.txt...................R.......
-│   └── toRemove_myProject_git_hash.cpp.......... Just there to have something to compile, remove me! (take care of bin file name collisions in bin/ !!!)
-├── examples..................................... A directory that contains example files, they are NOT installed
-│   ├── CMakeLists.txt...................R.......
-│   └── toRemove_example.cpp..................... Just there to have something to compile, remove me!
-├── CMakeLists.txt.......................R.......
-└── CTestConfig.cmake....................R....... CTest/CDash configuration file
+TODO
 #+END_SRC
 
-To test the generated project you can use the *check_myProject.sh* script
-#+BEGIN_SRC sh
-./check_myProject.sh
-#+END_SRC
+** DONE *doxygen*
 
-This script performs the following tasks
-
-#+NAME: Check_MyProject
-#+BEGIN_SRC sh 
-# Create build dir
-#
-cd myProject
-mkdir build
-cd build
-cmake ..
-
-# Check build
-#
-make
-
-# Check documentation (generated by Doxygen)
-# (open myProject/build/doc/doxygen/index.html with your web browser)
-#
-make doc
-
-# Check (local) install
-#
-make DESTDIR=local_install install
-
-# check test 
-#
-make test
-
-# ctest (+ cdash board)
-# 
-ctest -D Experimental
-#+END_SRC
-
-The approach is to perform an *out-of-source-build*. 
-
-The reason is twofold:
-- this allows the creation of *super-project* containing several *sub-projects*
-- this is really convenient if you use *git*, as the following *.gitignore* file
+Doxygen supports *bibTeX* files. Hence a *bibliography.bib* file in created in the *doc/* directory
+#+NAME: bibliography.bib
 #+BEGIN_SRC txt
-$ cat .gitignore
-build*/
-#+END_SRC 
-will filter out all the built files (*git status* is not polluted by generated files)
+%==================================================
+% OUR_PROJECT_NAME bibliography
+% Automatically generated, but never overwritten
+%==================================================
+%
+@Article{Heesch2008,
+  Title                    = {Doxygen: Source code documentation generator tool},
+  Author                   = {van Heesch, Dimitri},
+  Journal                  = {URL: http://www.doxygen.org},
+  Year                     = {2008}
+}
+#+END_SRC
 
-Note that any tentative of *in-source-build* is detected generate an error [[in-source-build]].
-
-One of the main advantage of the proposed script is that it automatically *exports* the project. If you want to use *myProject* in another cmake-built project, simply add
+You can include a citation with:
 #+BEGIN_SRC txt
-if(NOT TARGET myProject)
-find_package(myProject CONFIG REQUIRED)
-
-if(NOT ${myProject_FOUND}) 
-   message(FATAL_ERROR "Did not found myProject module!")
-endif(NOT ${myProject_FOUND})
-endif()
-
-target_link_libraries(yourProject myProject)
-#+END_SRC 
-in your project dependencies. You can take a look at [[[[project dependencies]]]] for further details
-
-This Export/Import feature is illustrated in the next paragraph
-
-*** A simple *super-project*
-
-The *createProject.sh* script has been developed with the aim to easily create a *super-project*.
-
-A *super-project* is a collection of *sub-projects* generated
-by the same *createProject.sh* script. 
-
-All dependencies are managed, that means if you have two projects, *project_A* and *project_B* any modification of *project_A* leads to 
-a re-build of *project_B*. In the same way any dependence of *project_A* is exported to *project_B*. 
-
-Moreover the configuration offers *two ways of working*:
-- you can build, modify... your *super-project* with its own *CMakeLists.txt* file
-- you can *locally* build, modify... any of its *sub-project*
-
-To see how it works, go into the *tutorial/* directory and create three sub-projects, *project_A*, *project_B* and *project_C*:
-#+NAME: Create_SuperProject_subProject
-#+BEGIN_SRC sh
-../createProject.sh superProject/project_A
-../createProject.sh superProject/project_B
-../createProject.sh superProject/project_C
+/**
+ * @cite Heesch2008 
+ */
 #+END_SRC
 
-Then you have to create your super-project *superProject/CMakeLists.txt* file, here is the code:
-#+NAME: Create_SuperProject_CMakeLists
+We also have defined the *doc/figures* subdirectory to store figures. These figures can be included in the doxygen doc:
 #+BEGIN_SRC txt
-cmake_minimum_required(VERSION 3.0)
-project(superProject)
-
-# Your 3 sub-projects
-#
-add_subdirectory(project_A)
-add_subdirectory(project_B)
-add_subdirectory(project_C)
-
-# Target: test
-#--------------------------------------------------
-# (if you want to use a CDash board, you must define a CTestConfig.cmake file,
-#  in the superProject root directory)
-include(CTest)
-
-# Target: doc
-#--------------------------------------------------
-# Define a global "doc" target:
-# This target build sequentially project_A_doc project_B_doc and project_C_doc
-#
-add_custom_target(doc DEPENDS project_A_doc project_B_doc project_C_doc)
+/*
+ * @image html figures/one_figure.png
+ */
 #+END_SRC
 
-For dependencies you have to overwrite some *ProjectDependencies.cmake* files. Lets say that *project_C* depends on *project_A* and *project_B*.
-In this simple case you only have to redefine *project_C/cmake/ProjectDependencies.cmake* with:
-#+NAME: Create_SuperProject_C_AB
-#+BEGIN_SRC txt
-# C depends on A
-#
-if(NOT TARGET project_A)
-  find_package(project_A CONFIG REQUIRED)
-  if(NOT ${project_A_FOUND}) 
-     message(FATAL_ERROR "Did not found project_A module!")
-  endif()
-endif()
-target_link_libraries(project_C project_A)
 
-# C depends on B
-#
-if(NOT TARGET project_B)
-  find_package(project_B CONFIG REQUIRED)
-  if(NOT ${project_B_FOUND}) 
-     message(FATAL_ERROR "Did not found project_B module!")
-  endif()
-endif()
-target_link_libraries(project_C project_B)
-#+END_SRC
+** *make install* effects
+Note:
+ - *bin/* directory is *installed* in the *bin* directory
+ - *examples/* directory is *not installed* and stay in the build-tree.
 
-That is all!
 
-Now the *super-project* can be tested using the *check_superProject.sh* script.
+# ################################################################  
+# RECIPES FOR THE *CREATEPROJECT.SH* SCRIPT
+# ################################################################  
 
-#+BEGIN_SRC sh
-./check_superProject.sh
-#+END_SRC
+# ================================================================
+# The *cpp files*
+# ================================================================
 
-This script perform exactly the same tasks that the *myProject* one:
-
-#+NAME: Check_SuperProject
-#+BEGIN_SRC sh 
-# Create build dir
-#
-cd superProject
-mkdir build
-cd build
-cmake ..
-
-# Check build
-#
-make
-
-# check documentation (generated by Doxygen)
-#
-make doc
-
-# check (local) install
-#
-make DESTDIR=local_install install
-
-# check test 
-#
-make test
-
-# ctest (+ cdash board)
-# -> create a cdash board before
-# ctest -D Experimental
-#+END_SRC
-
-** TODO
-
-- Include more examples Qt...
-- Create tutorial/CMakeLists.txt with automatic test of the scripts
-- Test for other configurations: cmake version, host machine...
-- Configure for SIMD (too oriented toward numerical applications?)
-  
-* Recipes for the *createProject.sh* script
-
-** The *cpp files*
-
-We begin by creating some C++ files used to check that everything is working as expected. 
-
-*** *Library* cpp files
-
-These files are needed to create the *OUR_PROJECT_NAME* library
+# For lib
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: toRemove_git_hash.hpp
-#+BEGIN_SRC C
+#+BEGIN_SRC C :exports none
 #pragma once
 
 /** @file
@@ -299,7 +108,7 @@ std::string git_hash();
 #+END_SRC
  
 #+NAME: toRemove_git_hash.cpp
-#+BEGIN_SRC C
+#+BEGIN_SRC C :exports none
 #include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 #include <OUR_PROJECT_NAME/config.hpp>
 
@@ -313,12 +122,11 @@ std::string git_hash()
 } /* OUR_PROJECT_NAME */
 #+END_SRC
 
-*** *Executable* C++ file
-   
-This file is required to show how executables are build and *installed* in the *bin* directory
+# For bin/
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: toRemove_OUR_PROJECT_NAME_git_hash.cpp
-#+BEGIN_SRC C
+#+BEGIN_SRC C :exports none
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME binary directory
  */
@@ -342,12 +150,11 @@ int main()
 }
 #+END_SRC
 
-*** *Example* C++ file
-   
-This file is required to show how examples are build. They are *not* installed and stay in the build-tree.
+# For examples/
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: toRemove_example.cpp
-#+BEGIN_SRC C
+#+BEGIN_SRC C :exports none
 /** @file
  *  @brief A file from the OUR_PROJECT_NAME examples directory
  *
@@ -379,41 +186,19 @@ int main()
 }
 #+END_SRC
 
-** *Doxygen* configuration file
-
-Next we define a *doxyfile.in* configuration file stored in the *doc/doxygen/* directory.
-This is only an example, you can use your own configuration, you only have to take care of the directory paths. 
-
-# $> more doxyfile.in | sed '/^#/ d' | sed '/^$/d' > compressed.txt
-# remove what you want
-# $> doxygen -u compressed.txt
-# to retrieve a well formed doxyfile.in
+# For doxygen
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: doxyfile.in
-#+BEGIN_SRC txt
+#+BEGIN_SRC txt :exports none
 PROJECT_NAME           = @PROJECT_NAME@
 PROJECT_NUMBER         = @PROJECT_VERSION@
-
-HIDE_UNDOC_MEMBERS     = YES
-HIDE_UNDOC_CLASSES     = YES
-HIDE_FRIEND_COMPOUNDS  = YES
-
-HIDE_SCOPE_NAMES       = YES
-EXTRACT_STATIC         = YES
-
-REPEAT_BRIEF           = YES
-ALWAYS_DETAILED_SEC    = NO
-
-INLINE_SOURCES         = NO
 
 CITE_BIB_FILES         = @PROJECT_SOURCE_DIR@/doc/@PROJECT_NAME@_bibliography.bib
 
 WARN_LOGFILE           = doxygenError.txt
 
-CLANG_ASSISTED_PARSING = YES
-CLANG_OPTIONS          = @CMAKE_CXX_FLAGS@
-
-INPUT                  = @PROJECT_SOURCE_DIR@/ \
+INPUT                  = @PROJECT_SOURCE_DIR@/@PROJECT_NAME@ \
                          @PROJECT_SOURCE_DIR@/examples \
                          @PROJECT_SOURCE_DIR@/bin \
                          @PROJECT_SOURCE_DIR@/test
@@ -422,8 +207,7 @@ FILE_PATTERNS          = *.hpp *.cpp
 RECURSIVE              = YES
 
 EXCLUDE_PATTERNS       =  */moc_/* */_automoc/*
-EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@/examples \
-                         @PROJECT_SOURCE_DIR@/test
+EXAMPLE_PATH           = @PROJECT_SOURCE_DIR@
 EXAMPLE_PATTERNS       = *.cpp
 EXAMPLE_RECURSIVE      = YES
 
@@ -434,19 +218,13 @@ EXTRA_PACKAGES         = mathtools \
                          stmaryrd
 			 
 PREDEFINED             = DOXYGEN_DOC
-SKIP_FUNCTION_MACROS   = NO
-
-COLLABORATION_GRAPH    = YES
-INCLUDE_GRAPH          = YES
-INCLUDED_BY_GRAPH      = YES
-GRAPHICAL_HIERARCHY    = YES
-DIRECTORY_GRAPH        = YES
 #+END_SRC
 
-We then have to create the corresponding *CMakeLists.txt*
+# CMakeLists.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: DoxygenCMakeList
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # OUR_PROJECT_NAME Doxygen "doc" target
 # Automatically generated, but never overwritten
@@ -486,39 +264,6 @@ endif()
 
 #+END_SRC
 
-*** Bibliography
-Doxygen supports *bibTeX* files. To use this feature you only have to create a *bibliography.bib* file in the *doc/* directory.
-
-#+NAME: bibliography.bib
-#+BEGIN_SRC txt
-%==================================================
-% OUR_PROJECT_NAME bibliography
-% Automatically generated, but never overwritten
-%==================================================
-%
-@Article{Heesch2008,
-  Title                    = {Doxygen: Source code documentation generator tool},
-  Author                   = {van Heesch, Dimitri},
-  Journal                  = {URL: http://www.doxygen.org},
-  Year                     = {2008}
-}
-#+END_SRC
-
-You can include a citation with:
-#+BEGIN_SRC txt
-/*
- * @cite Heesch2008 
- */
-#+END_SRC
-
-*** Figures
-
-We also have defined the *doc/figures* subdirectory to store figures. These figures can be included in the doxygen doc:
-#+BEGIN_SRC txt
-/*
- * @image html figures/one_figure.png
- */
-#+END_SRC
 
 ** The *CMakeLists.txt* files
 
@@ -527,11 +272,9 @@ We also have defined the *doc/figures* subdirectory to store figures. These figu
 The main *CMakeFiles.txt* is defined below. This is an adaptation of [[https://github.com/bast/cmake-example/blob/master/CMakeLists.txt][https://github.com/bast/cmake-example/blob/master/CMakeLists.txt]].
 
 #+NAME: MainCMakeList
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #**************************************************
 # A script to generate C++ project skeletons
-# Fri Jul 24 2015
-# V. Picaud,
 # https://github.com/vincent-picaud/CMakeScript
 #**************************************************
 
@@ -666,7 +409,7 @@ install(FILES
 *** *Library* CMakeLists.txt
 
 #+NAME: LibraryCMakeList
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Build OUR_PROJECT_NAME library
 # Automatically generated, but not overwritten
@@ -781,7 +524,7 @@ install(FILES
 *** *Binary* CMakeLists.txt
 
 #+NAME: BinCMakeLists.txt
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Build OUR_PROJECT_NAME executables
 # Automatically generated, but not overwritten
@@ -818,7 +561,7 @@ endforeach()
 *** *Examples* CMakeLists.txt
 
 #+NAME: ExampleCMakeList
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # OUR_PROJECT_NAME executables
 # Automatically generated, but not overwritten
@@ -862,7 +605,7 @@ endforeach()
 *** *GTest/CTest* CMakeLists.txt
 
 #+NAME: GTestCMakeList
-#+BEGIN_SRC txt
+#+BEGIN_SRC txt :exports none
 #==================================================
 # OUR_PROJECT_NAME unit tests
 # Automatically generated, but not overwritten
@@ -900,7 +643,7 @@ endforeach()
 
 Define a trivial test used to check that everything is okay:
 #+NAME: toRemove_check_git_hash.cpp
-#+BEGIN_SRC txt
+#+BEGIN_SRC txt :exports none
 #include "gtest/gtest.h"
 #include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
 
@@ -920,7 +663,7 @@ Again a major source of inspiration was [[https://github.com/bast/cmake-example/
 This file must be in the project *root* directory.
 
 #+NAME: CTestConfig.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #==================================================
@@ -939,7 +682,7 @@ set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 200)
 The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies. This is an important file and you have to modify it for your own needs.
 
 #+NAME: ProjectDependencies.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # OUR_PROJECT_NAME dependencies
 # Automatically generated, but not overwritten, 
@@ -1069,7 +812,7 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 **** The *ConfigTesting.cmake* file
 
 #+NAME: ConfigTesting.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #
@@ -1092,7 +835,7 @@ enable_testing()
 For more tuning you can modify this file.
 
 #+NAME: OurProjectNameConfig.cmake.in
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #==================================================
@@ -1105,7 +848,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
 **** <<in-source-build>> The *ConfigSafeGuards.cmake* file
 
 #+NAME: ConfigSafeGuards.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #
@@ -1136,7 +879,7 @@ endif()
 **** The *FindGit.cmake* file
 
 #+NAME: FindGit.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #
@@ -1157,7 +900,7 @@ find_package_handle_standard_args(Git DEFAULT_MSG GIT_EXECUTABLE)
 **** The *ConfigGitRevision.cmake* file
 
 #+NAME: ConfigGitRevision.cmake
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 #==================================================
 # Automatically generated, but not overwritten
 #
@@ -1183,7 +926,7 @@ endif()
 **** The *config.hpp.in* file
 
 #+NAME: config.hpp.in
-#+BEGIN_SRC txt 
+#+BEGIN_SRC txt  :exports none
 //==================================================
 // Automatically generated, but not overwritten
 //==================================================
@@ -1217,65 +960,6 @@ Contains full listings of the automatically generated scripts.
 # see http://emacs.stackexchange.com/questions/2951/can-i-include-a-common-code-block-in-two-different-code-blocks-in-org-mode
 #
 
-** The *tutorial* scripts
-*** A simple *project*
-The *tutorial/create_myProject.sh* is defined by:
-#+BEGIN_SRC sh :tangle yes :tangle tutorial/create_myProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
-<<Create_MyProject>>
-#+END_SRC
-
-The *tutorial/check_myProject.sh* is defined by:
-#+BEGIN_SRC sh :tangle yes :tangle tutorial/check_myProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
-<<Check_MyProject>>
-#+END_SRC
-
-*** A simple *super-project*
-The *tutorial/create_superProject.sh* is defined by:
-#+BEGIN_SRC sh :tangle yes :tangle tutorial/create_superProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
-<<Create_SuperProject_subProject>>
-
-project_path=./
-project_name=superProject
-
-current_file="${project_path}/${project_name}/CMakeLists.txt"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-<<Create_SuperProject_CMakeLists>>
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-fi
-
-#==================================================
-
-current_file="${project_path}/${project_name}/project_C/cmake/project_CDependencies.cmake"
-#
-# CAVEAT: here, for the example, we must overwrite!
-#
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-<<Create_SuperProject_C_AB>>
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-#+END_SRC
-
-The *tutorial/check_superProject.sh* is defined by:
-#+BEGIN_SRC sh :tangle yes :tangle tutorial/check_superProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
-<<Check_SuperProject>>
-#+END_SRC
-
 
 ** The *createProject.sh* script
 
@@ -1284,8 +968,6 @@ The main script *createProject.sh* that allows automatic generation of project i
 #+BEGIN_SRC sh :tangle yes :tangle createProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
 #**************************************************
 # A script to generate C++ project skeletons
-# Fri Jul 24 2015
-# V. Picaud,
 # https://github.com/vincent-picaud/CMakeScript
 #**************************************************
 
@@ -1786,52 +1468,5 @@ chmod 0444 "${current_file}"
 fi
 
 #+END_SRC
-
-*** The *createEmptyProject.sh* script
-
-This is only a convenience script that allows to create the *directory structure* of a project.
-You can create this directory structure, fill it with your c++ source files and then finally invoke
-the *createProject.sh* script to create the *CMakeLists.txt*...
-
-#+BEGIN_SRC sh :tangle yes :tangle createEmptyProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
-#**************************************************
-# A script to generate C++ project skeletons
-# Fri Jul 24 2015
-# V. Picaud,
-# https://github.com/vincent-picaud/CMakeScript
-#**************************************************
-
-if [ "$#" -ne 1 ]; then
-    echo -e "\\n\\nUsage is:\\n" $0 " project_name\\n"
-    exit -1
-fi
-
-echo -e "Create C++ empty project skeleton: $1"
-
-#**************************************************
-# Generate an "empty" skeleton C++ project
-# -> populate it with your C++ files
-# -> call createProject.sh to generate the CMakefiles, etc.
-#**************************************************
-
-project_name="$(basename "$1" | tr -st ' ' '_' )"
-project_path="$(dirname "$1")"
-
-mkdir -p ${project_path}/${project_name}/${project_name}
-mkdir -p ${project_path}/${project_name}/bin
-mkdir -p ${project_path}/${project_name}/examples
-mkdir -p ${project_path}/${project_name}/test
-mkdir -p ${project_path}/${project_name}/doc/doxygen/
-mkdir -p ${project_path}/${project_name}/doc/figures
-mkdir -p ${project_path}/${project_name}/cmake
-
-#+END_SRC
-
-  
-  
-
-
-   
-
 
 #  LocalWords:  cmake stackoverflow github emacs

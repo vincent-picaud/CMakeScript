@@ -1,4 +1,3 @@
-
 #**************************************************
 # A script to generate C++ project skeletons
 # Fri Jul 24 2015
