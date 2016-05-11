@@ -5,5 +5,5 @@ cd build/
 cmake ..
 make
 make test
-make doc
+
 

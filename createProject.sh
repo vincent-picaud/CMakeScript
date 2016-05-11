@@ -53,7 +53,11 @@ set(OUR_PROJECT_NAME_VERSION_PATCH 0)
 set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
 
 # OPTIONS
+#
 option(OUR_PROJECT_NAME_USE_GTEST "Use GTest (fixme turn off if you want to install)" ON)
+
+option(OUR_PROJECT_NAME_USE_QT5 "Use QT5" ON)
+option(OUR_PROJECT_NAME_USE_QWT "Use QWt" ON)
 
 # Location of additional cmake modules
 #
@@ -199,6 +203,19 @@ configure_file(
     ${PROJECT_BINARY_DIR}/OUR_PROJECT_NAME/config.hpp
     @ONLY)
 
+
+#--------------------------------------------------
+# Qt option is ON
+#--------------------------------------------------
+
+if(${OUR_PROJECT_NAME_USE_QT5})
+
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+endif()
 
 #--------------------------------------------------
 # Collect files and define target for the library
@@ -512,188 +529,6 @@ sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
 fi
 
 #**************************************************
-# Create all C++ files
-#**************************************************
-
-current_file="${project_path}/${project_name}/test/toRemove_extraLevel/toRemove_check_git_hash.cpp"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-#include "gtest/gtest.h"
-#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
-
-using namespace OUR_PROJECT_NAME;
-
-TEST(Demo,Trivial) {
-   EXPECT_TRUE(true);
-}
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
-fi
-
-#**************************************************
-
-current_file="${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.hpp"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-#pragma once
-
-/** @file
- *  @brief A file from the OUR_PROJECT_NAME library
- */
-#include <string>
-
-namespace OUR_PROJECT_NAME {
-
-/** @brief A function that returns the git hash
- *
- *  Its role is to check link with @ref toRemove_OUR_PROJECT_NAME_git_hash.cpp
- */
-std::string git_hash();
-
-} /* OUR_PROJECT_NAME */
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
-fi
-
-#**************************************************
-
-current_file="${project_path}/${project_name}/${project_name}/toRemove_extraLevel/toRemove_git_hash.cpp"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
-#include <OUR_PROJECT_NAME/config.hpp>
-
-namespace OUR_PROJECT_NAME {
-
-std::string git_hash()
-{
-    return std::string(OUR_PROJECT_NAME_GIT_REVISION);
-}
-
-} /* OUR_PROJECT_NAME */
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
-fi
-
-#**************************************************
-
-current_file="${project_path}/${project_name}/bin/toRemove_extraLevel/toRemove_${project_name}_git_hash.cpp"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-/** @file
- *  @brief A file from the OUR_PROJECT_NAME binary directory
- */
-#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
-#include <iostream>
-
-using namespace OUR_PROJECT_NAME;
-
-/** @brief Returns the git hash
- *
- *  Usage:
- *  @code
- *  ./toRemove_OUR_PROJECT_NAME_git_hash
- *  @endcode
- *
- *  @note this executable is installed in @b bin/
- */
-int main()
-{
-    std::cout << "\nCurrent git hash is " << git_hash();
-}
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
-fi
-
-#**************************************************
-
-current_file="${project_path}/${project_name}/examples/toRemove_example.cpp"
-#
-# Do not overwrite me!
-#
-if [ ! -f "${current_file}" ]
-then
-current_file_dir="$(dirname "${current_file}")"
-
-mkdir -p "${current_file_dir}"
-echo "${current_file}" 1>&2
-more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
-
-/** @file
- *  @brief A file from the OUR_PROJECT_NAME examples directory
- *
- *  @include toRemove_example.cpp
- *
- *  Also note that you can:
- *    - include figures: @image html figures/one_figure.png
- *
- *    - use bibliographic reference @cite Heesch2008 
- * 
- */
-#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
-#include <iostream>
-
-using namespace OUR_PROJECT_NAME;
-
-/** @brief Returns the git hash
- *
- *  Usage:
- *  @code
- *  ./toRemove_git_hash
- *  @endcode
- *
- *  @note this executable is @b not installed in @b bin/
- */
-int main()
-{
-   std::cout << "\nCurrent git hash is " << git_hash();
-}
-
-//GO.SYSIN DD PRIVATE_DD_TAG
-sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
-fi
-
-#**************************************************
 # Create Doc stuff
 #**************************************************
 #
@@ -795,14 +630,8 @@ Put your figures here (one_figure.png file for instance)
 
 They can be included in the doxygen doc with:
 
-/*
-
- ...
-
+/**
  * @image html figures/one_figure.png
-
- ...
-
  */
 
 //GO.SYSIN DD PRIVATE_DD_TAG
@@ -839,6 +668,143 @@ include(CMakeFindDependencyMacro)
 
 include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
 
+
+//GO.SYSIN DD PRIVATE_DD_TAG
+sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
+fi
+
+#**************************************************
+
+current_file="${project_path}/${project_name}/cmake/FindQwt.cmake"
+#
+# Do not overwrite me!
+#
+if [ ! -f "${current_file}" ]
+then
+current_file_dir="$(dirname "${current_file}")"
+
+mkdir -p "${current_file_dir}"
+echo "${current_file}" 1>&2
+more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
+
+# Qt Widgets for Technical Applications
+# available at http://www.http://qwt.sourceforge.net/
+#
+# The module defines the following variables:
+#  QWT_FOUND - the system has Qwt
+#  QWT_INCLUDE_DIR - where to find qwt_plot.h
+#  QWT_INCLUDE_DIRS - qwt includes
+#  QWT_LIBRARY - where to find the Qwt library
+#  QWT_LIBRARIES - aditional libraries
+#  QWT_MAJOR_VERSION - major version
+#  QWT_MINOR_VERSION - minor version
+#  QWT_PATCH_VERSION - patch version
+#  QWT_VERSION_STRING - version (ex. 5.2.1)
+#  QWT_ROOT_DIR - root dir (ex. /usr/local)
+
+#=============================================================================
+# Copyright 2010-2013, Julien Schueller
+# All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met: 
+# 
+# 1. Redistributions of source code must retain the above copyright notice, this
+#    list of conditions and the following disclaimer. 
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution. 
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# The views and conclusions contained in the software and documentation are those
+# of the authors and should not be interpreted as representing official policies, 
+# either expressed or implied, of the FreeBSD Project.
+#=============================================================================
+
+
+find_path ( QWT_INCLUDE_DIR
+  NAMES qwt_plot.h
+  HINTS ${QT_INCLUDE_DIR} /usr/local/qwt/include
+  PATH_SUFFIXES qwt qwt-qt3 qwt-qt4 qwt-qt5
+)
+
+set ( QWT_INCLUDE_DIRS ${QWT_INCLUDE_DIR} )
+
+# version
+set ( _VERSION_FILE ${QWT_INCLUDE_DIR}/qwt_global.h )
+if ( EXISTS ${_VERSION_FILE} )
+  file ( STRINGS ${_VERSION_FILE} _VERSION_LINE REGEX "define[ ]+QWT_VERSION_STR" )
+  if ( _VERSION_LINE )
+    string ( REGEX REPLACE ".*define[ ]+QWT_VERSION_STR[ ]+\"(.*)\".*" "\\1" QWT_VERSION_STRING "${_VERSION_LINE}" )
+    string ( REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\1" QWT_MAJOR_VERSION "${QWT_VERSION_STRING}" )
+    string ( REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\2" QWT_MINOR_VERSION "${QWT_VERSION_STRING}" )
+    string ( REGEX REPLACE "([0-9]+)\\.([0-9]+)\\.([0-9]+)" "\\3" QWT_PATCH_VERSION "${QWT_VERSION_STRING}" )
+  endif ()
+endif ()
+
+
+# check version
+set ( _QWT_VERSION_MATCH TRUE )
+if ( Qwt_FIND_VERSION AND QWT_VERSION_STRING )
+  if ( Qwt_FIND_VERSION_EXACT )
+    if ( NOT Qwt_FIND_VERSION VERSION_EQUAL QWT_VERSION_STRING )
+      set ( _QWT_VERSION_MATCH FALSE )
+    endif ()
+  else ()
+    if ( QWT_VERSION_STRING VERSION_LESS Qwt_FIND_VERSION )
+      set ( _QWT_VERSION_MATCH FALSE )
+    endif ()
+  endif ()
+endif ()
+
+
+find_library ( QWT_LIBRARY
+  NAMES qwt qwt-qt3 qwt-qt4 qwt-qt5
+  HINTS ${QT_LIBRARY_DIR} /usr/local/qwt/lib
+)
+
+set ( QWT_LIBRARIES ${QWT_LIBRARY} )
+
+
+# try to guess root dir from include dir
+if ( QWT_INCLUDE_DIR )
+  string ( REGEX REPLACE "(.*)/include.*" "\\1" QWT_ROOT_DIR ${QWT_INCLUDE_DIR} )
+# try to guess root dir from library dir
+elseif ( QWT_LIBRARY )
+  string ( REGEX REPLACE "(.*)/lib[/|32|64].*" "\\1" QWT_ROOT_DIR ${QWT_LIBRARY} )
+endif ()
+
+
+# handle the QUIETLY and REQUIRED arguments
+include ( FindPackageHandleStandardArgs )
+if ( CMAKE_VERSION LESS 2.8.3 )
+  find_package_handle_standard_args( Qwt DEFAULT_MSG QWT_LIBRARY QWT_INCLUDE_DIR _QWT_VERSION_MATCH )
+else ()
+  find_package_handle_standard_args( Qwt REQUIRED_VARS QWT_LIBRARY QWT_INCLUDE_DIR _QWT_VERSION_MATCH VERSION_VAR QWT_VERSION_STRING )
+endif ()
+
+
+mark_as_advanced (
+  QWT_LIBRARY 
+  QWT_LIBRARIES
+  QWT_INCLUDE_DIR
+  QWT_INCLUDE_DIRS
+  QWT_MAJOR_VERSION
+  QWT_MINOR_VERSION
+  QWT_PATCH_VERSION
+  QWT_VERSION_STRING
+  QWT_ROOT_DIR
+)
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -943,6 +909,52 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # #
 # set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 #
+
+# Qt5
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+if(${OUR_PROJECT_NAME_USE_QT5})
+
+#
+find_package(Qt5Core REQUIRED)
+include_directories(${Qt5Core_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Core_INCLUDE_DIRS})
+get_target_property(QtCore_location Qt5::Core LOCATION)
+#target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_location})
+
+#
+find_package(Qt5Widgets REQUIRED)
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
+get_target_property(QtWidgets_location Qt5::Widgets LOCATION)
+target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_location} ${Qt5Core_location})
+
+#
+find_package(Qt5PrintSupport REQUIRED)
+include_directories(${Qt5PrintSupport_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5PrintSupport_INCLUDE_DIRS})
+get_target_property(QtPrintSupport_location Qt5::PrintSupport LOCATION)
+target_link_libraries(OUR_PROJECT_NAME ${Qt5PrintSupport_location} ${Qt5Core_location})
+
+#
+# Add all the remaining QT modules you need here...
+#
+
+endif()
+
+
+# Qwt
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+if(${OUR_PROJECT_NAME_USE_QWT})
+
+find_package(Qwt REQUIRED)
+include_directories(${QWT_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${QWT_INCLUDE_DIRS})
+target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${Qt5Core_LIBRARIES})
+
+endif()
+
 
 # Qt5
 #--------------------------------------------------

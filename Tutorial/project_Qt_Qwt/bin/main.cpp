@@ -1,5 +1,5 @@
 #include <qapplication.h>
-#include "mainwindow.h"
+#include <project_Qt_Qwt/mainwindow.h>
 
 int main ( int argc, char **argv )
 {
