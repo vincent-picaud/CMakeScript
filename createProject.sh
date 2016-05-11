@@ -890,29 +890,18 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# CAVEAT Qt5 PREAMBLE 
-#--------------------------------------------------
-# If you project depends on Qt, uncomment me and PUT ME BEFORE
-# add_library(OUR_PROJECT_NAME SHARED 
-#             ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
-#             ${OUR_PROJECT_NAME_LIB_SOURCE_HPP} config.hpp)
-# in the CMakeLists.txt
-# -> TODO: find out how to do that in a clean way
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# # CAVEAT:
-# # When Qt is used, it may be important to use POSITION_INDEPENDENT_CODE property to avoid error message like:
-# #       >> You must build your code with position independent code if Qt was built with -reduce-relocations. 
-# #          Compile your code with -fPIC (-fPIE is not enough). <<
-# # (see: http://qt.apidoc.info/5.2.0/qtdoc/cmake-manual.html)
-# #
-# set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-#
-
 # Qt5
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# CAVEAT: OUR_PROJECT_NAME/CMakeLists.txt also contains
+#
+# if(${OUR_PROJECT_NAME_USE_QT5})
+#   set(CMAKE_AUTOMOC ON)
+#   set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+# endif()
 
+#
 if(${OUR_PROJECT_NAME_USE_QT5})
 
 #
@@ -945,6 +934,13 @@ endif()
 
 # Qwt
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
+# CAVEAT: maybe you have to add your own FindQwt.cmake in 
+#         the OUR_PROJECT_NAME/cmake directory
+#         You can find one at:
+#         http://www.cmake.org/Wiki/CMakeUserFindQwt
+#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
 
 if(${OUR_PROJECT_NAME_USE_QWT})
 
@@ -955,45 +951,6 @@ target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES} ${Qt5Widgets_LIBRARIES} 
 
 endif()
 
-
-# Qt5
-#--------------------------------------------------
-# If you project depends on Qt, uncomment me
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Qt5Widgets REQUIRED)
-# # Add dependency 
-# include_directories(${Qt5Widgets_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
-# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_LIBRARIES}) but
-# get_target_property(QtWidgets_location Qt5::Widgets LOCATION)
-# # as described in http://doc.qt.io/qt-5/cmake-manual.html
-# target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_location})
-#
-# find_package(Qt5Core REQUIRED)
-# # Add dependency 
-# include_directories(${Qt5Core_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Core_INCLUDE_DIRS})
-# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_LIBRARIES}), but
-# get_target_property(QtCore_location Qt5::Core LOCATION)
-# # as described in http://doc.qt.io/qt-5/cmake-manual.html
-# target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_location})
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-# Qwt
-#--------------------------------------------------
-# If you project depends on Qwt, uncomment me
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Qwt REQUIRED)
-# include_directories(${QWT_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${QWT_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES})
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# CAVEAT: you must add your own FindQwt.cmake in 
-#         the OUR_PROJECT_NAME/cmake directory
-#         You can find one at:
-#         http://www.cmake.org/Wiki/CMakeUserFindQwt
-#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"

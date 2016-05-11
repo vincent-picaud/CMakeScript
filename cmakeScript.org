@@ -233,9 +233,25 @@ make
 
 ** One project using *Qt* & *Qwt*
 
-***
+This part shows how to compile a project using
+[[https://www.qt.io/qt-framework/][Qt]] and
+[[http://qwt.sourceforge.net/][Qwt]].  It assumes that these two
+libraries are already installed.
 
-* Some details
+You just have to type
+#+BEGIN_SRC txt
+cd Tutorial/
+../createProject.sh project_Qt_Qwt
+cd project_Qt_Qwt/
+mkdir build
+cd build/
+cmake -Dproject_Qt_Qwt_USE_QT5=ON -Dproject_Qt_Qwt_USE_QWT=ON ..
+make
+#+END_SRC
+
+Normally everything should run smoothly and you will get the *bode* executable in the *project_Qt_Qwt/bin* directory
+
+* Some notes
 
 ** *doxygen*
 
@@ -268,12 +284,6 @@ We also have defined the *doc/figures* subdirectory to store figures. These figu
  * @image html figures/one_figure.png
  */
 #+END_SRC
-
-
-** *make install* effects
-Note:
- - *bin/* directory is *installed* in the *bin* directory
- - *examples/* directory is *not installed* and stay in the build-tree.
 
 
 # ################################################################  
@@ -502,7 +512,7 @@ install(FILES
 )
 #+END_SRC
 
-*** *Library* CMakeLists.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: LibraryCMakeList
 #+BEGIN_SRC txt  :exports none
@@ -632,7 +642,7 @@ install(FILES
 )
 #+END_SRC
 
-*** *Binary* CMakeLists.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: BinCMakeLists.txt
 #+BEGIN_SRC txt  :exports none
@@ -669,7 +679,7 @@ install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} EXPORT OUR_PROJECT_NAMETarge
 endforeach()
 #+END_SRC
 
-*** *Examples* CMakeLists.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: ExampleCMakeList
 #+BEGIN_SRC txt  :exports none
@@ -713,7 +723,7 @@ endforeach()
 
 #+END_SRC
 
-*** *GTest/CTest* CMakeLists.txt
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: GTestCMakeList
 #+BEGIN_SRC txt :exports none
@@ -751,27 +761,7 @@ endforeach()
 
 #+END_SRC
 
-Define a trivial test used to check that everything is okay:
-#+NAME: toRemove_check_git_hash.cpp
-#+BEGIN_SRC txt :exports none
-#include "gtest/gtest.h"
-#include <OUR_PROJECT_NAME/toRemove_extraLevel/toRemove_git_hash.hpp>
-
-using namespace OUR_PROJECT_NAME;
-
-TEST(Demo,Trivial) {
-   EXPECT_TRUE(true);
-}
-#+END_SRC
-
-*** The *cmake/* directory
-
-Again a major source of inspiration was [[https://github.com/bast/cmake-example/blob/master/CMakeLists.txt]].
-
-
-**** <<project dependencies>> The *ProjectDependencies.cmake* file
-
-The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies. This is an important file and you have to modify it for your own needs.
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #+NAME: ProjectDependencies.cmake
 #+BEGIN_SRC txt  :exports none
@@ -841,29 +831,18 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 # target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# CAVEAT Qt5 PREAMBLE 
-#--------------------------------------------------
-# If you project depends on Qt, uncomment me and PUT ME BEFORE
-# add_library(OUR_PROJECT_NAME SHARED 
-#             ${OUR_PROJECT_NAME_LIB_SOURCE_CPP} 
-#             ${OUR_PROJECT_NAME_LIB_SOURCE_HPP} config.hpp)
-# in the CMakeLists.txt
-# -> TODO: find out how to do that in a clean way
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# # CAVEAT:
-# # When Qt is used, it may be important to use POSITION_INDEPENDENT_CODE property to avoid error message like:
-# #       >> You must build your code with position independent code if Qt was built with -reduce-relocations. 
-# #          Compile your code with -fPIC (-fPIE is not enough). <<
-# # (see: http://qt.apidoc.info/5.2.0/qtdoc/cmake-manual.html)
-# #
-# set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-#
-
 # Qt5
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# CAVEAT: OUR_PROJECT_NAME/CMakeLists.txt also contains
+#
+# if(${OUR_PROJECT_NAME_USE_QT5})
+#   set(CMAKE_AUTOMOC ON)
+#   set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+# endif()
 
+#
 if(${OUR_PROJECT_NAME_USE_QT5})
 
 #
@@ -896,6 +875,13 @@ endif()
 
 # Qwt
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
+# CAVEAT: maybe you have to add your own FindQwt.cmake in 
+#         the OUR_PROJECT_NAME/cmake directory
+#         You can find one at:
+#         http://www.cmake.org/Wiki/CMakeUserFindQwt
+#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
 
 if(${OUR_PROJECT_NAME_USE_QWT})
 
@@ -906,45 +892,6 @@ target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES} ${Qt5Widgets_LIBRARIES} 
 
 endif()
 
-
-# Qt5
-#--------------------------------------------------
-# If you project depends on Qt, uncomment me
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Qt5Widgets REQUIRED)
-# # Add dependency 
-# include_directories(${Qt5Widgets_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Widgets_INCLUDE_DIRS})
-# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_LIBRARIES}) but
-# get_target_property(QtWidgets_location Qt5::Widgets LOCATION)
-# # as described in http://doc.qt.io/qt-5/cmake-manual.html
-# target_link_libraries(OUR_PROJECT_NAME ${Qt5Widgets_location})
-#
-# find_package(Qt5Core REQUIRED)
-# # Add dependency 
-# include_directories(${Qt5Core_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${Qt5Core_INCLUDE_DIRS})
-# # CAVEAT: do not use target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_LIBRARIES}), but
-# get_target_property(QtCore_location Qt5::Core LOCATION)
-# # as described in http://doc.qt.io/qt-5/cmake-manual.html
-# target_link_libraries(OUR_PROJECT_NAME ${Qt5Core_location})
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-# Qwt
-#--------------------------------------------------
-# If you project depends on Qwt, uncomment me
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Qwt REQUIRED)
-# include_directories(${QWT_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${QWT_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${QWT_LIBRARIES})
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# CAVEAT: you must add your own FindQwt.cmake in 
-#         the OUR_PROJECT_NAME/cmake directory
-#         You can find one at:
-#         http://www.cmake.org/Wiki/CMakeUserFindQwt
-#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
 #+END_SRC
 
 
@@ -1152,6 +1099,14 @@ ExternalProject_Add(${DL_ARGS_PROJ}-download
                     TEST_COMMAND        ""
 )
 #+END_SRC
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# CAVEAT: you must add your own FindQwt.cmake in 
+#         the OUR_PROJECT_NAME/cmake directory
+#         You can find one at:
+#         http://www.cmake.org/Wiki/CMakeUserFindQwt
+#         https://github.com/qgis/QGIS/blob/master/cmake/FindQwt.cmake
 
 #+NAME: FindQwt.cmake
 #+BEGIN_SRC txt  :exports none
@@ -1409,7 +1364,7 @@ endif()
 # see http://emacs.stackexchange.com/questions/2951/can-i-include-a-common-code-block-in-two-different-code-blocks-in-org-mode
 #
 
-#+BEGIN_SRC sh :tangle yes :tangle createProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes 
+#+BEGIN_SRC sh :tangle yes :tangle createProject.sh :mkdirp yes :tangle-mode (identity #o755) :noweb yes  :exports none
 #**************************************************
 # A script to generate C++ project skeletons
 # https://github.com/vincent-picaud/CMakeScript
