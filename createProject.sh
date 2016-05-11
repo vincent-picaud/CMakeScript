@@ -56,8 +56,12 @@ set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAM
 #
 option(OUR_PROJECT_NAME_USE_GTEST "Use GTest (fixme turn off if you want to install)" ON)
 
-option(OUR_PROJECT_NAME_USE_QT5 "Use QT5" ON)
-option(OUR_PROJECT_NAME_USE_QWT "Use QWt" ON)
+option(OUR_PROJECT_NAME_USE_QT5 "Use QT5" OFF)
+option(OUR_PROJECT_NAME_USE_QWT "Use QWt" OFF)
+option(OUR_PROJECT_NAME_USE_OpenMP "Use OpenMP" OFF)
+option(OUR_PROJECT_NAME_USE_BOOST "Use BOOST" OFF)
+option(OUR_PROJECT_NAME_USE_BLAS "Use BLAS" OFF)
+option(OUR_PROJECT_NAME_USE_LAPACK "Use LAPACK" OFF)
 
 # Location of additional cmake modules
 #
@@ -856,38 +860,46 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #       error. However the target project_A is already available.
 
 # OpenMP
-#--------------------------------------------------
-# If you project depends on OpenMP, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(OpenMP REQUIRED)
-# if (OPENMP_FOUND)
-#   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-#   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-#   if(NOT MSVC)
-#     target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
-#   endif()
-# endif()
+if(${OUR_PROJECT_NAME_USE_OpenMP})
+find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+if(NOT MSVC)
+target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
+endif()
+endif()
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # BOOST
-#--------------------------------------------------
-# If you project depends on BOOST, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization)
-#  
-# include_directories(${Boost_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+if(${OUR_PROJECT_NAME_USE_BOOST})
+find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization) # Add any the module you need!
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # BLAS
-#--------------------------------------------------
-# If you project depends on BLAS, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# enable_language(Fortran)
-# find_package(BLAS REQUIRED)
-# include_directories(${BLAS_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+if(${OUR_PROJECT_NAME_USE_BLAS})
+enable_language(Fortran)
+find_package(BLAS REQUIRED)
+include_directories(${BLAS_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+endif()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# LAPACK
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if(${OUR_PROJECT_NAME_USE_LAPACK})
+find_package(LAPACK REQUIRED)
+include_directories(${LAPACK_INCLUDE_DIRS})
+target_include_directories(Kiss_LinearAlgebra PUBLIC ${LAPACK_INCLUDE_DIRS})
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Qt5

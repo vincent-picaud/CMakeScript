@@ -12,24 +12,26 @@
 
 * Introduction
 
-*CMake* is a great tool, however despite all its advantages it is sometimes boring to create a new build solution for each new C++ project.
-The aim of these *shell scripts* is to provide a working (at least I hope so) project skeleton in one command line:
+It is boring, error prone and time consuming to create a new *CMake*
+build solution for each new C++ project.  The aim of this *shell
+script* is to provide a working (at least I hope so) *project
+skeleton* in one command line:
 #+BEGIN_SRC txt
 createProject.sh myProject
 #+END_SRC
 
-I developed these *shell scripts* for my personal usages under
-*Linux*. By consequence they are currently not tested for *Windows* or
+I developed this *shell scripts* for my personal usages under
+*Linux*. By consequence it is currently not tested for *Windows* or
 other *OS*.  Feel free to modify them, feed backs or pull requests are
 welcome.
 
-All theses *shell scripts* are *automatically* generated using [[http://orgmode.org/][emacs +
-org-mode]] from an unique *cmakeScript.org* source file. For the hasty
-users or for those who do not have *emacs* and *org-mode* properly
-installed I also provide the generated scripts for a direct
-usage. However any modification must be done by editing the
-*cmakeScript.org* source file first and then by re-generating the
-scripts with the [[http://orgmode.org/manual/Extracting-source-code.html][C-c C-v t]] command.
+This *shell script* and the associated doc are *automatically*
+generated using [[http://orgmode.org/][emacs + org-mode]] from an unique *cmakeScript.org*
+source file. For those who do not want to generate these files I also
+provide them directly into this git repository. However any
+modification must be done by editing the *cmakeScript.org* source file
+first and then by re-generating the files with the [[http://orgmode.org/manual/Extracting-source-code.html][C-c C-v t]]
+command.
 
 * Getting started
 
@@ -42,44 +44,45 @@ Just type
 #+END_SRC
 
 This will create the following *project skeleton*. By default the
-script *never* overwrite created files. Thats means that you can
+script *never* overwrite created files. That means that you can
 safely update your build system by reusing the *createProject.sh*
 script. Some files are protected against *writing*, this is only a
-hint to notify that for a basic usage your generaly do not have to
+hint to notify that for a basic usage your generally do not have to
 modify them. However, if you need more tuning you can safely modify
 them, your modifications will *not* be erased by the script.
 
 #+BEGIN_SRC txt
 myProject/
-├── [drwxr-xr-x]  bin
-│   └── [-r--r--r--]  CMakeLists.txt
-├── [drwxr-xr-x]  cmake
-│   ├── [-r--r--r--]  ConfigGitRevision.cmake
-│   ├── [-rw-r--r--]  ConfigGTest.cmake
-│   ├── [-r--r--r--]  config.hpp.in
-│   ├── [-r--r--r--]  ConfigSafeGuards.cmake
-│   ├── [-rw-r--r--]  DownloadProject.cmake
-│   ├── [-rw-r--r--]  DownloadProject.CMakeLists.cmake.in
-│   ├── [-r--r--r--]  FindGit.cmake
-│   ├── [-rw-r--r--]  myProjectConfig.cmake.in
-│   └── [-rw-r--r--]  myProjectDependencies.cmake
-├── [-rw-r--r--]  CMakeLists.txt
-├── [drwxr-xr-x]  doc
-│   ├── [drwxr-xr-x]  doxygen
-│   │   ├── [-rw-r--r--]  CMakeLists.txt
-│   │   └── [-rw-r--r--]  doxyfile.in
-│   ├── [drwxr-xr-x]  figures
-│   │   └── [-rw-r--r--]  readme.txt
-│   └── [-rw-r--r--]  myProject_bibliography.bib
-├── [drwxr-xr-x]  examples
-│   └── [-rw-r--r--]  CMakeLists.txt
-├── [drwxr-xr-x]  myProject
-│   └── [-rw-r--r--]  CMakeLists.txt
-└── [drwxr-xr-x]  test
-    └── [-rw-r--r--]  CMakeLists.txt
+├── bin
+│   └── CMakeLists.txt
+├── cmake
+│   ├── ConfigGitRevision.cmake
+│   ├── ConfigGTest.cmake
+│   ├── config.hpp.in
+│   ├── ConfigSafeGuards.cmake
+│   ├── DownloadProject.cmake
+│   ├── DownloadProject.CMakeLists.cmake.in
+│   ├── FindGit.cmake
+│   ├── FindQwt.cmake
+│   ├── myProjectConfig.cmake.in
+│   └── myProjectDependencies.cmake
+├── CMakeLists.txt
+├── doc
+│   ├── doxygen
+│   │   ├── CMakeLists.txt
+│   │   └── doxyfile.in
+│   ├── figures
+│   │   └── readme.txt
+│   └── myProject_bibliography.bib
+├── examples
+│   └── CMakeLists.txt
+├── myProject
+│   └── CMakeLists.txt
+└── test
+    └── CMakeLists.txt
 #+END_SRC
 
-Thats all! You can add your cpp files in the directories.
+That's all! You can add your cpp files in the directories.
 
 To build the project, do the following:
 
@@ -144,9 +147,10 @@ make DESTDIR=path_to_local_install install
 *** *Install* target
 If you look in the *Tutorial/project_A/build/path_to_local_install*
 you will see that *gtest* is also installed. Generally we do not want
-this and I consider that as a *buggy feature* (fix are welcome!)  that I have not solved
-yet.
-The current "solution" is to turn *OFF* the *project_A_USE_GTEST*. This can be done by using *ccmake*
+this and I consider that as a *buggy feature*. Unfortunately I have
+not managed to solved it yet (fix are welcome!).  The current
+"solution" is to turn *OFF* the *project_A_USE_GTEST*. This can be
+done by using *ccmake*
 #+BEGIN_SRC sh
 cd Tutorial/project_A/build
 ccmake .
@@ -278,13 +282,35 @@ You can include a citation with:
  */
 #+END_SRC
 
-We also have defined the *doc/figures* subdirectory to store figures. These figures can be included in the doxygen doc:
+We also have defined the *doc/figures* sub-directory to store figures. These figures can be included in the doxygen doc:
 #+BEGIN_SRC txt
-/*
+/**
  * @image html figures/one_figure.png
  */
 #+END_SRC
 
+** *option* for external library dependencies
+
+I have defined the following options:
+ - project_name_USE_QT5
+ - project_name_USE_QWT
+ - project_name_USE_OpenMP
+ - project_name_USE_BOOST
+ - project_name_USE_BLAS
+ - project_name_USE_LAPACK
+
+You can activate them using:
+ - command line *cmake -Dproject_Qt_Qwt_USE_QT5=ON*
+ - ccmake
+ - by directly modifying the *project_name/CMakeLists.txt* file (__which is the recommended solution__)
+
+Feel free to add yours!
+
+* Final word
+
+This script is far from being perfect. Its aim is to generate a
+project *skeleton to be modified* for your special needs. I hope it
+can help.
 
 # ################################################################  
 # RECIPES FOR THE *CREATEPROJECT.SH* SCRIPT
@@ -403,8 +429,12 @@ set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAM
 #
 option(OUR_PROJECT_NAME_USE_GTEST "Use GTest (fixme turn off if you want to install)" ON)
 
-option(OUR_PROJECT_NAME_USE_QT5 "Use QT5" ON)
-option(OUR_PROJECT_NAME_USE_QWT "Use QWt" ON)
+option(OUR_PROJECT_NAME_USE_QT5 "Use QT5" OFF)
+option(OUR_PROJECT_NAME_USE_QWT "Use QWt" OFF)
+option(OUR_PROJECT_NAME_USE_OpenMP "Use OpenMP" OFF)
+option(OUR_PROJECT_NAME_USE_BOOST "Use BOOST" OFF)
+option(OUR_PROJECT_NAME_USE_BLAS "Use BLAS" OFF)
+option(OUR_PROJECT_NAME_USE_LAPACK "Use LAPACK" OFF)
 
 # Location of additional cmake modules
 #
@@ -797,38 +827,46 @@ endforeach()
 #       error. However the target project_A is already available.
 
 # OpenMP
-#--------------------------------------------------
-# If you project depends on OpenMP, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(OpenMP REQUIRED)
-# if (OPENMP_FOUND)
-#   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-#   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-#   if(NOT MSVC)
-#     target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
-#   endif()
-# endif()
+if(${OUR_PROJECT_NAME_USE_OpenMP})
+find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+if(NOT MSVC)
+target_link_libraries(OUR_PROJECT_NAME ${OpenMP_CXX_FLAGS})
+endif()
+endif()
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # BOOST
-#--------------------------------------------------
-# If you project depends on BOOST, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization)
-#  
-# include_directories(${Boost_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+if(${OUR_PROJECT_NAME_USE_BOOST})
+find_package(Boost REQUIRED COMPONENTS regex date_time filesystem system serialization) # Add any the module you need!
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(OUR_PROJECT_NAME ${Boost_LIBRARIES})
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # BLAS
-#--------------------------------------------------
-# If you project depends on BLAS, uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# enable_language(Fortran)
-# find_package(BLAS REQUIRED)
-# include_directories(${BLAS_INCLUDE_DIRS})
-# target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
-# target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+if(${OUR_PROJECT_NAME_USE_BLAS})
+enable_language(Fortran)
+find_package(BLAS REQUIRED)
+include_directories(${BLAS_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${BLAS_INCLUDE_DIRS})
+target_link_libraries(OUR_PROJECT_NAME ${BLAS_LIBRARIES})
+endif()
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# LAPACK
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+if(${OUR_PROJECT_NAME_USE_LAPACK})
+find_package(LAPACK REQUIRED)
+include_directories(${LAPACK_INCLUDE_DIRS})
+target_include_directories(Kiss_LinearAlgebra PUBLIC ${LAPACK_INCLUDE_DIRS})
+endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Qt5
