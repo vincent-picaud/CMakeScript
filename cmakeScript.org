@@ -178,9 +178,16 @@ path_to_local_install_no_gtest/
                 └── libproject_A.so.0.1.0
 #+END_SRC 
 
-** Super-Project
+** Two projects, B depends on A
 
-You have to modify the *Tutorial/project_B/cmake/project_BDependencies.cmake* file:
+Imagine that you have two projects A and B. Moreover B depends on
+A. To create B build solution you only have to modify two files:
+ - *Tutorial/project_B/cmake/project_BDependencies.cmake*
+ - *Tutorial/project_B/cmake/project_BConfig.cmake.in*
+
+You have to modify the
+*Tutorial/project_B/cmake/project_BDependencies.cmake* file:
+
 #+BEGIN_SRC txt
 if(NOT TARGET project_A)
 find_package(project_A CONFIG REQUIRED)
@@ -191,7 +198,9 @@ endif()
 target_link_libraries(project_B project_A)
 #+END_SRC
 
-You also to modify the *Tutorial/project_B/cmake/project_BConfig.cmake.in* file and uncomment one line
+You also to modify the
+*Tutorial/project_B/cmake/project_BConfig.cmake.in* file and uncomment
+one line
 #+BEGIN_SRC txt
 find_dependency(project_A)
 #+END_SRC
@@ -217,6 +226,10 @@ cd Tutorial/project_A/build
 make
 #+END_SRC
 
+
+** One project using *Qt* & *Qwt*
+
+***
 
 * Some details
 
