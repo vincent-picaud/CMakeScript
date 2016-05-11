@@ -310,6 +310,8 @@ include(ConfigSafeGuards)
 
 # GTest
 #
+include(CTest)
+enable_testing()
 include(ConfigGTest)
 
 # Example how to set c++ compiler flags for GNU
