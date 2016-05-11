@@ -1,4 +1,3 @@
-cd Tutorial/
 ../createProject.sh project_A
 cd project_A/
 mkdir build

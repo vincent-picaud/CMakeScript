@@ -86,7 +86,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
-if(${OUR_PROJECT_NAME_GTEST})
+if(${OUR_PROJECT_NAME_USE_GTEST})
 include(CTest)
 enable_testing()
 include(ConfigGTest)
@@ -831,7 +831,14 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 # see: http://www.cmake.org/cmake/help/v3.0/variable/CMAKE_CURRENT_LIST_DIR.html
 #      http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
 
+include(CMakeFindDependencyMacro)
+
+# If your project depends on project_A, uncomment me
+#
+# find_dependency(project_A)
+
 include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
+
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
@@ -864,23 +871,23 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 
 # Sub-project dependence
 #--------------------------------------------------
-# For a "Super-Project" containing projectUpstream and OUR_PROJECT_NAME,
-# if OUR_PROJECT_NAME depends on projectUpstream, simply uncomment me
+# For a "Super-Project" containing project_A and OUR_PROJECT_NAME,
+# if OUR_PROJECT_NAME depends on project_A, simply uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# if(NOT TARGET projectUpstream)
-# find_package(projectUpstream CONFIG REQUIRED)
-# if(NOT ${projectUpstream_FOUND}) 
-#    message(FATAL_ERROR "Did not found projectUpstream module!")
+# if(NOT TARGET project_A)
+# find_package(project_A CONFIG REQUIRED)
+# if(NOT ${project_A_FOUND}) 
+#    message(FATAL_ERROR "Did not found project_A module!")
 # endif()
 # endif()
-# target_link_libraries(OUR_PROJECT_NAME projectUpstream)
+# target_link_libraries(OUR_PROJECT_NAME project_A)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Note: the role of the if(NOT TARGET projectUpstream) guard is only relevant in case
-#       of super-project build where "projectUpstream" is included by add_subdirectory
+# Note: the role of the if(NOT TARGET project_A) guard is only relevant in case
+#       of super-project build where "project_A" is included by add_subdirectory
 #       from a master CMakeLists.txt file.
-#       In that case the file projectUpstreamTargets.cmake is not yet generated and
-#       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
-#       error. However the target projectUpstream is already available.
+#       In that case the file project_ATargets.cmake is not yet generated and
+#       find_package(project_A CONFIG REQUIRED) would generate a "file not found" 
+#       error. However the target project_A is already available.
 
 # OpenMP
 #--------------------------------------------------

@@ -178,8 +178,46 @@ path_to_local_install_no_gtest/
                 └── libproject_A.so.0.1.0
 #+END_SRC 
 
+** Super-Project
 
-There is still a "buggy" feature I have not solved yet
+You have to modify the *Tutorial/project_B/cmake/project_BDependencies.cmake* file:
+#+BEGIN_SRC txt
+if(NOT TARGET project_A)
+find_package(project_A CONFIG REQUIRED)
+if(NOT ${project_A_FOUND}) 
+   message(FATAL_ERROR "Did not found project_A module!")
+endif()
+endif()
+target_link_libraries(project_B project_A)
+#+END_SRC
+
+You also to modify the *Tutorial/project_B/cmake/project_BConfig.cmake.in* file and uncomment one line
+#+BEGIN_SRC txt
+find_dependency(project_A)
+#+END_SRC
+
+If you get the error
+#+BEGIN_SRC txt
+CMake Error at cmake/project_BDependencies.cmake:19 (find_package):
+  Could not find a package configuration file provided by "project_A" with
+  any of the following names:
+
+    project_AConfig.cmake
+    project_a-config.cmake
+
+  Add the installation prefix of "project_A" to CMAKE_PREFIX_PATH or set
+  "project_A_DIR" to a directory containing one of the above files.  If
+  "project_A" provides a separate development package or SDK, be sure it has
+  been installed.
+#+END_SRC
+that means that you have forgotten to build *project_A*. You must build it by the usual procedure:
+
+#+BEGIN_SRC txt
+cd Tutorial/project_A/build
+make
+#+END_SRC
+
+
 * Some details
 
 ** *doxygen*
@@ -474,7 +512,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
-if(${OUR_PROJECT_NAME_GTEST})
+if(${OUR_PROJECT_NAME_USE_GTEST})
 include(CTest)
 enable_testing()
 include(ConfigGTest)
@@ -822,23 +860,23 @@ The *OUR_PROJECT_NAMEDependencies.cmake* file contains your project dependencies
 
 # Sub-project dependence
 #--------------------------------------------------
-# For a "Super-Project" containing projectUpstream and OUR_PROJECT_NAME,
-# if OUR_PROJECT_NAME depends on projectUpstream, simply uncomment me
+# For a "Super-Project" containing project_A and OUR_PROJECT_NAME,
+# if OUR_PROJECT_NAME depends on project_A, simply uncomment me
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# if(NOT TARGET projectUpstream)
-# find_package(projectUpstream CONFIG REQUIRED)
-# if(NOT ${projectUpstream_FOUND}) 
-#    message(FATAL_ERROR "Did not found projectUpstream module!")
+# if(NOT TARGET project_A)
+# find_package(project_A CONFIG REQUIRED)
+# if(NOT ${project_A_FOUND}) 
+#    message(FATAL_ERROR "Did not found project_A module!")
 # endif()
 # endif()
-# target_link_libraries(OUR_PROJECT_NAME projectUpstream)
+# target_link_libraries(OUR_PROJECT_NAME project_A)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Note: the role of the if(NOT TARGET projectUpstream) guard is only relevant in case
-#       of super-project build where "projectUpstream" is included by add_subdirectory
+# Note: the role of the if(NOT TARGET project_A) guard is only relevant in case
+#       of super-project build where "project_A" is included by add_subdirectory
 #       from a master CMakeLists.txt file.
-#       In that case the file projectUpstreamTargets.cmake is not yet generated and
-#       find_package(projectUpstream CONFIG REQUIRED) would generate a "file not found" 
-#       error. However the target projectUpstream is already available.
+#       In that case the file project_ATargets.cmake is not yet generated and
+#       find_package(project_A CONFIG REQUIRED) would generate a "file not found" 
+#       error. However the target project_A is already available.
 
 # OpenMP
 #--------------------------------------------------
@@ -1153,7 +1191,14 @@ For more tuning you can modify this file.
 # see: http://www.cmake.org/cmake/help/v3.0/variable/CMAKE_CURRENT_LIST_DIR.html
 #      http://www.cmake.org/cmake/help/v3.0/manual/cmake-packages.7.html
 
+include(CMakeFindDependencyMacro)
+
+# If your project depends on project_A, uncomment me
+#
+# find_dependency(project_A)
+
 include("${CMAKE_CURRENT_LIST_DIR}/OUR_PROJECT_NAMETargets.cmake")
+
 #+END_SRC 
 
 **** <<in-source-build>> The *ConfigSafeGuards.cmake* file
