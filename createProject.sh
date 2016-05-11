@@ -42,6 +42,8 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #==================================================
 #
 cmake_minimum_required(VERSION 3.0)
+project(OUR_PROJECT_NAME LANGUAGES CXX)
+enable_language(Fortran C CXX)
 
 # OUR_PROJECT_NAME version
 #
@@ -49,11 +51,6 @@ set(OUR_PROJECT_NAME_VERSION_MAJOR 0)
 set(OUR_PROJECT_NAME_VERSION_MINOR 1)
 set(OUR_PROJECT_NAME_VERSION_PATCH 0)
 set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
-
-# Define project name & version & languages
-#
-project(OUR_PROJECT_NAME VERSION ${OUR_PROJECT_NAME_VERSION} LANGUAGES CXX)
-enable_language(Fortran C CXX)
 
 # Location of additional cmake modules
 #
@@ -66,13 +63,17 @@ set(CMAKE_MODULE_PATH
 #
 include(ConfigSafeGuards)
 
+# GTest
+#
+include(ConfigGTest)
+
 # Example how to set c++ compiler flags for GNU
 #
 if((CMAKE_CXX_COMPILER_ID MATCHES GNU) OR (CMAKE_CXX_COMPILER_ID MATCHES Clang))
-    set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
+    set(CMAKE_CXX_FLAGS         "${CMAKE_CXX_FLAGS} -std=c++14 -Wall -Wno-unknown-pragmas -Wno-sign-compare -Woverloaded-virtual -Wwrite-strings -Wno-unused")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g3")
     set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
-#    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
 
 #--------------------------------------------------
@@ -86,10 +87,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
-#if( NOT (CMAKE_SYSTEM_NAME MATCHES Windows))
-# gtest not yet supported by mxe
 add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
-#endif()
 
 # Our OUR_PROJECT_NAME examples build
 #
@@ -478,12 +476,10 @@ more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG'
 #==================================================
 #
 
-# find GTest
+# Setup
 #--------------------------------------------------
 
 find_package(Threads REQUIRED)
-find_package(GTest REQUIRED)
-include_directories(${GTEST_INCLUDE_DIRS})
 
 # Generate tests and associated targets
 #--------------------------------------------------
@@ -496,12 +492,13 @@ foreach(ONE_TEST_CPP ${ALL_TESTS_CPP})
    # Avoid name collision 
    # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
    add_executable(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_CPP})
+
    set_target_properties(OUR_PROJECT_NAME_${ONE_TEST_EXEC} PROPERTIES OUTPUT_NAME ${ONE_TEST_EXEC}) 
    target_link_libraries(OUR_PROJECT_NAME_${ONE_TEST_EXEC} 
                          OUR_PROJECT_NAME
-                         ${GTEST_BOTH_LIBRARIES}
+                         gtest gmock_main
                          ${CMAKE_THREAD_LIBS_INIT})
-   # CTest
+   # Add Test
    add_test(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_EXEC})
 endforeach()
 
