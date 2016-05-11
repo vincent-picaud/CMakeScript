@@ -52,6 +52,9 @@ set(OUR_PROJECT_NAME_VERSION_MINOR 1)
 set(OUR_PROJECT_NAME_VERSION_PATCH 0)
 set(OUR_PROJECT_NAME_VERSION ${OUR_PROJECT_NAME_VERSION_MAJOR}.${OUR_PROJECT_NAME_VERSION_MINOR}.${OUR_PROJECT_NAME_VERSION_PATCH})
 
+# OPTIONS
+option(OUR_PROJECT_NAME_USE_GTEST "Use GTest (fixme turn off if you want to install)" ON)
+
 # Location of additional cmake modules
 #
 set(CMAKE_MODULE_PATH
@@ -62,12 +65,6 @@ set(CMAKE_MODULE_PATH
 # Guard against in-source builds and bad build-type strings
 #
 include(ConfigSafeGuards)
-
-# GTest
-#
-include(CTest)
-enable_testing()
-include(ConfigGTest)
 
 # Example how to set c++ compiler flags for GNU
 #
@@ -89,7 +86,13 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/OUR_PROJECT_NAME/)
 
 # Our OUR_PROJECT_NAME testing framework (gtest)
 #
+if(${OUR_PROJECT_NAME_GTEST})
+include(CTest)
+enable_testing()
+include(ConfigGTest)
+
 add_subdirectory(${PROJECT_SOURCE_DIR}/test/)
+endif()
 
 # Our OUR_PROJECT_NAME examples build
 #
@@ -155,7 +158,6 @@ install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/OUR_PROJECT_NAMEConfigVersion.cmake"
   DESTINATION
     ${ConfigPackageLocation}
-
 )
 
 //GO.SYSIN DD PRIVATE_DD_TAG

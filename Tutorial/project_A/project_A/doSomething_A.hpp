@@ -1,5 +1,5 @@
 #pragma once
 
-#include <cstring>
+#include <string>
 
 std::string doSomething_A();
