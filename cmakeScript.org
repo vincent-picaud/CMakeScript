@@ -699,13 +699,16 @@ foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
 # Build it!
 #
 get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
-# Avoid name collision 
-# (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
-add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
-set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
-target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
 
-install(TARGETS OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} EXPORT OUR_PROJECT_NAMETargets RUNTIME DESTINATION bin)
+# Avoid name collision 
+#
+set(TARGET_NAME OUR_PROJECT_NAME_Bin_${ONE_SOURCE_EXEC})
+
+add_executable(${TARGET_NAME} ${ONE_SOURCE_CPP})
+set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+target_link_libraries(${TARGET_NAME} OUR_PROJECT_NAME)
+
+install(TARGETS ${TARGET_NAME} EXPORT OUR_PROJECT_NAMETargets RUNTIME DESTINATION bin)
 endforeach()
 #+END_SRC
 
@@ -736,18 +739,21 @@ foreach(ONE_SOURCE_CPP ${ALL_SOURCES_CPP})
   # Build it!
   #
   get_filename_component(ONE_SOURCE_EXEC ${ONE_SOURCE_CPP} NAME_WE)
+
   # Avoid name collision 
-  # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
-  add_executable(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} ${ONE_SOURCE_CPP})
-  set_target_properties(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
-  target_link_libraries(OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} OUR_PROJECT_NAME)
+  #
+  set(TARGET_NAME OUR_PROJECT_NAME_Examples_${ONE_SOURCE_EXEC})
+
+  add_executable(${TARGET_NAME} ${ONE_SOURCE_CPP})
+  set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_SOURCE_EXEC}) 
+  target_link_libraries(${TARGET_NAME} OUR_PROJECT_NAME)
 
   # For the moment examples are NOT installed
   # -> but if required this should look like:
   #   (in order to preserve directory hierarchy)
   #
   # get_filename_component(ONE_SOURCE_RELATIVE_DIR ${ONE_SOURCE_CPP} DIRECTORY)
-  # install(FILE OUR_PROJECT_NAME_${ONE_SOURCE_EXEC} DESTINATION examples/${ONE_SOURCE_RELATIVE_DIR})
+  # install(FILE ${TARGET_NAME} DESTINATION examples/${ONE_SOURCE_RELATIVE_DIR})
   
 endforeach()
 
@@ -776,17 +782,19 @@ foreach(ONE_TEST_CPP ${ALL_TESTS_CPP})
    # Build it!
    #
    get_filename_component(ONE_TEST_EXEC ${ONE_TEST_CPP} NAME_WE)
-   # Avoid name collision 
-   # (trick found at:http://cmake.3232098.n2.nabble.com/What-is-the-preferred-way-to-avoid-quot-same-name-already-exists-quot-error-td7585687.html)
-   add_executable(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_CPP})
 
-   set_target_properties(OUR_PROJECT_NAME_${ONE_TEST_EXEC} PROPERTIES OUTPUT_NAME ${ONE_TEST_EXEC}) 
-   target_link_libraries(OUR_PROJECT_NAME_${ONE_TEST_EXEC} 
+   # Avoid name collision 
+   #
+   set(TARGET_NAME OUR_PROJECT_NAME_Test_${ONE_TEST_EXEC})
+
+   add_executable(${TARGET_NAME} ${ONE_TEST_CPP})
+   set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_TEST_EXEC}) 
+   target_link_libraries(${TARGET_NAME} 
                          OUR_PROJECT_NAME
                          gtest gmock_main
                          ${CMAKE_THREAD_LIBS_INIT})
    # Add Test
-   add_test(OUR_PROJECT_NAME_${ONE_TEST_EXEC} ${ONE_TEST_EXEC})
+   add_test(${TARGET_NAME} ${ONE_TEST_EXEC})
 endforeach()
 
 #+END_SRC
