@@ -1,4 +1,2 @@
-Tutorial/**/cmake
-Tutorial/**/doc
-Tutorial/**/build
-CMakeLists.txt
+Tutorial/myProject/**
+./CMakeLists.txt
