@@ -990,7 +990,14 @@ mkdir -p "${current_file_dir}"
 echo "${current_file}" 1>&2
 more > "${current_file}" <<'//GO.SYSIN DD PRIVATE_DD_TAG' 
 
-# from https://github.com/Crascit/DownloadProject/blob/master/CMakeLists.txt
+# Detect if super project or not
+#
+if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) 
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Stand-alone project
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# adapated from https://github.com/Crascit/DownloadProject/blob/master/CMakeLists.txt
 # CAVEAT: use DownloadProject.cmake
 #
 if (CMAKE_VERSION VERSION_LESS 3.2)
@@ -1020,6 +1027,14 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include"
                         "${gmock_SOURCE_DIR}/include")
 endif()
+
+else(${CMAKE_PROJECT_NAME}=={PROJECT_NAME})
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Stand-alone project
+  #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+  
+endif(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME}) 
 
 //GO.SYSIN DD PRIVATE_DD_TAG
 sed -i 's/OUR_PROJECT_NAME/'${project_name}'/g' "${current_file}"
