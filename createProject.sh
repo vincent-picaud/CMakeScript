@@ -908,7 +908,7 @@ endif()
 if(${OUR_PROJECT_NAME_USE_LAPACK})
 find_package(LAPACK REQUIRED)
 include_directories(${LAPACK_INCLUDE_DIRS})
-target_include_directories(Kiss_LinearAlgebra PUBLIC ${LAPACK_INCLUDE_DIRS})
+target_include_directories(OUR_PROJECT_NAME PUBLIC ${LAPACK_INCLUDE_DIRS})
 endif()
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
