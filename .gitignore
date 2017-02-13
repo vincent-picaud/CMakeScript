@@ -1,2 +1,5 @@
 Tutorial/myProject/**
 ./CMakeLists.txt
+/Tutorial/project_A/**
+/Tutorial/project_Qt_Qwt/**
+
