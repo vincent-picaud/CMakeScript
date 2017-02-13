@@ -1375,19 +1375,17 @@ find_package_handle_standard_args(Git DEFAULT_MSG GIT_EXECUTABLE)
 # Adapted from: https://github.com/bast/cmake-example/tree/master/cmake
 #==================================================
 #
+set (GIT_REVISION)
 find_package(Git)
-if(GIT_FOUND)
+if (GIT_FOUND)
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-list --max-count=1 HEAD
+        COMMAND ${GIT_EXECUTABLE} rev-list --abbrev-commit --max-count=1 HEAD
         OUTPUT_VARIABLE OUR_PROJECT_NAME_GIT_REVISION
-        ERROR_QUIET
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
         )
-    if(NOT ${OUR_PROJECT_NAME_GIT_REVISION} STREQUAL "")
-        string(STRIP ${OUR_PROJECT_NAME_GIT_REVISION} OUR_PROJECT_NAME_GIT_REVISION)
-    endif()
-    message(STATUS "Current git revision is ${OUR_PROJECT_NAME_GIT_REVISION}")
-else()
-    set(OUR_PROJECT_NAME_GIT_REVISION "unknown")
+    string(STRIP
+        ${OUR_PROJECT_NAME_GIT_REVISION}
+        OUR_PROJECT_NAME_GIT_REVISION)
 endif()
 #+END_SRC
 
