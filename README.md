@@ -1,5 +1,9 @@
 # A shell script to generate CMake/C++ projects
 
+## CAVEAT
+Quite old... I now use Bazel. Mayebe you can have a look [here](https://github.com/vincent-picaud/Bazel_and_CompileCommands)
+
+## Old post
 It is boring, error prone and time consuming to create a new *CMake*
 build solution for each new C++ project.  The aim of this *shell
 script* is to provide a working (at least I hope so) *project
